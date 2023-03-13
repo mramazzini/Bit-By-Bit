@@ -21,3 +21,13 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+export const UPDATE_GAME = gql`
+  mutation updateGame($game: Game!) {
+    updateGame(game: $game) {
+      game {
+        score
+      }
+    }
+  }
+`;
