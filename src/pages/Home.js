@@ -4,11 +4,16 @@ import Clicker from "../components/home/Clicker";
 import '../styles/Home.css';
 
 function Home(){
+
+    const updateScore = (score) => {
+        console.log(score);
+    }
+
     return(
         <div className = 'home-page'>
             <Navbar />
-            <Clicker/>
-            
+            <Clicker onInputChange={updateScore}/>
+            <div className = 'home-divider'></div>
         </div>
     )
 }
