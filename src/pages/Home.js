@@ -1,12 +1,15 @@
 import React from "react";
 import Navbar from "../components/global/Navbar";
 import Clicker from "../components/home/Clicker";
+import Dashboard from "../components/home/Dashboard";
 import '../styles/Home.css';
 
-function Home(){
 
+
+function Home(){
+    const [score, setScore] = React.useState(0);
     const updateScore = (score) => {
-        console.log(score);
+        setScore(score+1);
     }
 
     return(
@@ -14,6 +17,7 @@ function Home(){
             <Navbar />
             <Clicker onInputChange={updateScore}/>
             <div className = 'home-divider'></div>
+            <Dashboard score={score}/>
         </div>
     )
 }
