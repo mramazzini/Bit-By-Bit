@@ -18,6 +18,7 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
@@ -36,6 +37,23 @@ const resolvers = {
       const token = signToken(user);
 
       return { token, user };
+    },
+
+    updateGame: async (parent, { score }, context) => {
+      const updatedGame = {
+        score: score,
+      };
+
+      const user = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        {
+          $set: {
+            game: updatedGame,
+          },
+        }
+      );
+
+      return updatedGame;
     },
   },
 };
