@@ -2,11 +2,12 @@ import react, { useState } from "react";
 import { Link } from "react-router-dom";
 import { LOGIN } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 import Auth from "../utils/auth";
 const LoginComponent = () => {
   const [formState, setFormState] = useState({ email: "", password: "" });
   const [login] = useMutation(LOGIN);
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -15,6 +16,7 @@ const LoginComponent = () => {
       });
       const token = mutationResponse.data.login.token;
       Auth.login(token);
+      navigate("/");
     } catch (e) {
       console.log(e);
     }

@@ -3,6 +3,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import Auth from "./components/utils/auth";
 import "./styles/global/App.css";
 
 import {
@@ -37,19 +39,29 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
-
+function RequireAuth({ children }) {
+  return Auth.loggedIn() === true ? children : <Navigate to="/login" replace />;
+}
 function App() {
   const [currentForm, setCurrentForm] = useState("Login");
 
   const toggleForm = (formName) => {
     setCurrentForm(formName);
   };
+
   return (
     <ApolloProvider client={client}>
       <div className="container">
         <Router>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <Home />
+                </RequireAuth>
+              }
+            />
 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
