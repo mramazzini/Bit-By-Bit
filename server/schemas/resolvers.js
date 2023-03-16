@@ -10,6 +10,10 @@ const resolvers = {
     user: async (parent, { username }) => {
       return User.findOne({ username });
     },
+    game: async (parent, args, context) => {
+      const user = await User.findOne({ _id: context.user._id });
+      return user.game;
+    },
   },
 
   Mutation: {
