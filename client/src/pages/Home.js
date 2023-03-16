@@ -9,30 +9,18 @@ import { GET_GAME } from "../components/utils/queries";
 
 function Home() {
   const [updateGame, { error }] = useMutation(UPDATE_GAME);
-
-  const [score, setScore] = useState();
+  const [initialized, setInitialized] = useState(false);
+  const [score, setScore] = useState(0);
   const {
     loading,
     error: error2,
     data: gameData,
-  } = useQuery(GET_GAME, {
-    onCompleted: (data) => {
-      setScore(data.game.score);
-      console.log(data.game);
-    },
-  });
+  } = useQuery(GET_GAME);
+
   const updateScore = async (score) => {
     setScore(score);
   };
-  const getScore = async () => {
-    try {
-      const data = await gameData;
-      return await gameData.game.score;
-    } catch (e) {
-      console.log(e);
-      return 0;
-    }
-  };
+  
 
   //AutoSave game every 30 seconds into database
   useEffect(() => {
@@ -46,19 +34,31 @@ function Home() {
         console.log("Game Autosaved!");
       } catch (e) {
         console.error("Error Autosaving");
-        console.error(error);
+        console.error(e);
       }
     }, 10000);
     return () => clearInterval(intervalId);
   }, [score]);
 
-  return (
+  if (loading){
+    console.log('loading');
+    return 'Loading...';
+  }
+  else if (error2){ return 'ERROR!';}
+  else{
+    if (!initialized){
+      setScore(gameData.game.score);
+      setInitialized(true);
+    }
+    return (
     <div className="home-page">
       <Navbar />
-      <Clicker onInputChange={updateScore} score={getScore} />
+      <Clicker onInputChange={updateScore} score={score} /> 
+      
       <div className="home-divider"></div>
-      {loading ? <div>Loading...</div> : <Dashboard score={score} />}
+       <Dashboard score={score} />
     </div>
   );
+}
 }
 export default Home;
