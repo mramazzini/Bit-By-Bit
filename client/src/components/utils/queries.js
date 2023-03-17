@@ -7,3 +7,13 @@ export const GET_GAME = gql`
     }
   }
 `;
+
+export const GET_UPGRADES = gql`
+  query upgrades {
+    upgrades {
+      name
+      status
+      flavor
+    }
+  }
+`;

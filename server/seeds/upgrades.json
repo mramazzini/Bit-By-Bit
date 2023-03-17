@@ -4,6 +4,16 @@
       "name": "Python Starter Pack",
       "status": "shown",
       "flavor": "It Begins"
+    },
+    {
+      "name": "Python Starter Pack",
+      "status": "hidden",
+      "flavor": "It Begins"
+    },
+    {
+      "name": "Python Starter Pack",
+      "status": "purchased",
+      "flavor": "It Begins"
     }
   ]
 }

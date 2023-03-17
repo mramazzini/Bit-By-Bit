@@ -31,13 +31,14 @@ const typeDefs = gql`
     users: [User]
     user(username: String!): User
     game: Game
+    upgrades: [Upgrade]
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     updateGame(score: Int!): Game
-    purchaseUpgrade(upgrade: String!): String
+    purchaseUpgrade(name: String!): String
   }
 `;
 

@@ -17,16 +17,21 @@ const resolvers = {
       const user = await User.findOne({ _id: context.user._id });
       return user.game;
     },
+    upgrades: async (parent, args, context) => {
+      const user = await User.findOne({ _id: context.user._id });
+      console.log(user);
+      return user.game.upgrades;
+    },
   },
 
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
       const token = signToken(user);
+
+      //Get upgrades from json and populate the model
       const fileData = await fs.readFile("./seeds/upgrades.json");
       const upgrades = JSON.parse(fileData).upgrades;
-
-      console.log(upgrades);
 
       const newGame = {
         score: 0,
@@ -65,20 +70,29 @@ const resolvers = {
     },
 
     updateGame: async (parent, { score }, context) => {
-      const updatedGame = {
-        score: score,
-      };
-
       const user = await User.findOneAndUpdate(
         { _id: context.user._id },
         {
           $set: {
-            game: updatedGame,
+            "game.score": score,
           },
-        }
+        },
+        { new: true }
       );
 
-      return updatedGame;
+      return user;
+    },
+
+    purchaseUpgrade: async (parent, { name }, context) => {
+      const user = await User.findOneAndUpdate(
+        {
+          _id: context.user._id,
+          "game.upgrades": { $elemMatch: { name: name } },
+        },
+        { $set: { "game.upgrades.$.status": "purchased" } },
+        { new: true }
+      );
+      return "purchased";
     },
   },
 };

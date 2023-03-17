@@ -3,17 +3,15 @@ import { useMutation, useQuery } from "@apollo/client";
 import Navbar from "../components/global/Navbar";
 import Clicker from "../components/home/Clicker";
 import Dashboard from "../components/home/Dashboard";
-import Auth from "../components/utils/auth";
-
 import "../styles/Home.css";
 import { UPDATE_GAME } from "../components/utils/mutations";
 import { GET_GAME } from "../components/utils/queries";
 
 function Home() {
-  const [updateGame, { error }] = useMutation(UPDATE_GAME);
+  const [updateGame] = useMutation(UPDATE_GAME);
   const [initialized, setInitialized] = useState(false);
   const [score, setScore] = useState(0);
-  const { loading, error: error2, data: gameData } = useQuery(GET_GAME);
+  const { loading, error, data: gameData } = useQuery(GET_GAME);
 
   const updateScore = async (score) => {
     setScore(score);
@@ -38,9 +36,8 @@ function Home() {
   }, [score]);
 
   if (loading) {
-    console.log("loading");
     return "Loading...";
-  } else if (error2) {
+  } else if (error) {
     return "ERROR!";
   } else {
     if (!initialized) {

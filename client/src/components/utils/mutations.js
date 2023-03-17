@@ -29,3 +29,9 @@ export const UPDATE_GAME = gql`
     }
   }
 `;
+
+export const PURCHASE_UPGRADE = gql`
+  mutation purchaseUpgrade($name: String!) {
+    purchaseUpgrade(name: $name)
+  }
+`;
