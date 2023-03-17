@@ -3,7 +3,6 @@ const { User } = require("../models");
 
 const { signToken } = require("../utils/auth");
 const fs = require("fs").promises;
-const path = require("path");
 
 const resolvers = {
   Query: {
@@ -27,16 +26,16 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
-
+      console.log(process.cwd());
       const token = signToken(user);
-
+      let fileData;
       //Get upgrades from json and populate the model
       await fs.readFile("./seeds/upgrades.json", "utf8", (err, data) => {
         if (err) {
           console.log(err);
           return;
         }
-        const fileData = data;
+        fileData = data;
       });
       const upgrades = JSON.parse(fileData).upgrades;
       const gameName = args.username + "'s Game";
