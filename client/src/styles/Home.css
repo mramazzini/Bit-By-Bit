@@ -40,7 +40,7 @@
   color: #000;
 }
 .clicker {
-  background: url("../../assets/FrederickMain.png");
+  background: url("../assets/FrederickMain.png");
   background-position-x: center; /* Center the image */
   background-position-y: 0%;
   background-size: 100%;

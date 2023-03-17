@@ -1,10 +1,13 @@
 import React from "react";
 import "../../styles/Home.css";
-
+import useSound from "use-sound";
+import boopSfx from "../../assets/boop.wav";
 function Clicker(props) {
   const [score, setScore] = React.useState(props.score);
   const [isActive, setIsActive] = React.useState(false);
+  const [play] = useSound(boopSfx);
   const updateScore = () => {
+    play();
     setScore(score + 1);
     props.onInputChange(score);
     setIsActive(true);
