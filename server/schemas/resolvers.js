@@ -26,32 +26,31 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
-      console.log(__dirname);
       const token = signToken(user);
-      let fileData;
-      //Get upgrades from json and populate the model
-      await fs.readFile("./seeds/upgrades.json", "utf8", (err, data) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        fileData = data;
-        console.log(data);
-      });
 
-      const upgrades = JSON.parse(fileData).upgrades;
+      let directoryPath;
+      if (process.env.NODE_ENV === "production") {
+        directoryPath = "server/seeds/upgrades.json";
+      } else {
+        directoryPath = "./seeds/upgrades.json";
+      }
+      console.log(directoryPath);
+      //Get upgrades from json and populate the model
+      const fileData = await fs.readFile(directoryPath, "utf8");
+
+      const upgrades = await JSON.parse(fileData).upgrades;
       const gameName = args.username + "'s Game";
       const newGame = {
         score: 0,
         name: gameName,
-        upgrades: upgrades,
+        upgrades: await upgrades,
       };
 
       await User.findOneAndUpdate(
         { username: args.username },
         {
           $set: {
-            game: newGame,
+            game: await newGame,
           },
         }
       );
