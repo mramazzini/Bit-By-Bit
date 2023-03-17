@@ -25,6 +25,7 @@ const typeDefs = gql`
     name: String!
     flavor: String!
     status: String!
+    effect: String!
   }
 
   type Query {

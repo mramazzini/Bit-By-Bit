@@ -11,9 +11,7 @@ function Clicker(props) {
   return (
     <div className="clicker-body">
       <div className="clicker-score">{props.score}</div>
-      <div className="clicker" onClick={updateScore}>
-        Click Me!
-      </div>
+      <div className="clicker" onClick={updateScore}></div>
     </div>
   );
 }

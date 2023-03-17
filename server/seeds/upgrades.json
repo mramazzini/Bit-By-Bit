@@ -1,19 +1,25 @@
 {
   "upgrades": [
     {
-      "name": "Python Starter Pack",
+      "name": "Stick",
       "status": "shown",
-      "flavor": "It Begins"
+      "decription": "Sturdy",
+      "flavor": "Bonk",
+      "effect": "Doubles your clicking power"
     },
     {
-      "name": "Python Starter Pack",
-      "status": "hidden",
-      "flavor": "It Begins"
+      "name": "Another Stick",
+      "status": "shown",
+      "decription": "Very Sturdy",
+      "flavor": "Boooonk",
+      "effect": "Doubles your clicking power"
     },
     {
-      "name": "Python Starter Pack",
-      "status": "purchased",
-      "flavor": "It Begins"
+      "name": "A third Stick",
+      "status": "shown",
+      "decription": "Threes a crowd",
+      "flavor": "BoOOOOONk",
+      "effect": "Doubles your clicking power"
     }
   ]
 }

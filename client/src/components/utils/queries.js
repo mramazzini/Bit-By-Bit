@@ -14,6 +14,7 @@ export const GET_UPGRADES = gql`
       name
       status
       flavor
+      effect
     }
   }
 `;

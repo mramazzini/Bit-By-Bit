@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "../../styles/Home.css";
 import UpgradesStore from "./UpgradesStore";
+import AdventureTabs from "./AdventureTabs";
 const Dashboard = ({ score }) => {
   const [activeTab, setActiveTab] = useState("tab1");
 
@@ -15,9 +16,9 @@ const Dashboard = ({ score }) => {
           className={`dashboard-nav-item ${
             activeTab === "editor" ? "active" : ""
           }`}
-          onClick={() => handleTabClick("editor")}
+          onClick={() => handleTabClick("adventure")}
         >
-          Problems
+          Adventure
         </li>
         <li
           className={`dashboard-nav-item ${
@@ -38,7 +39,7 @@ const Dashboard = ({ score }) => {
       </ul>
       <div className="top-divider"></div>
       <div className="dashboard-body">
-        {activeTab === "editor" && <div>Content for Tab 1</div>}
+        {activeTab === "adventure" && <AdventureTabs />}
         {activeTab === "upgrades" && <UpgradesStore />}
         {activeTab === "tab3" && <div>Content for Tab 3</div>}
       </div>

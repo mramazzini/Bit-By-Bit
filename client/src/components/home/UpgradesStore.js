@@ -49,7 +49,8 @@ const UpgradesStore = () => {
                 onClick={() => handlePurchase(upgrade.name)}
               >
                 <h3>{upgrade.name}</h3>
-                <p>Flavor: {upgrade.flavor}</p>
+                <p>{upgrade.effect}</p>
+                <p> {upgrade.flavor}</p>
               </button>
             </div>
           ) : null

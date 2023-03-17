@@ -17,6 +17,10 @@ const upgradeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  effect: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = upgradeSchema;
