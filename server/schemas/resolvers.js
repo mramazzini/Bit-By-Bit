@@ -1,6 +1,6 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User } = require("../models");
-const mongoose = require("mongoose");
+
 const { signToken } = require("../utils/auth");
 const fs = require("fs").promises;
 const path = require("path");
@@ -27,16 +27,19 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
+
       const token = signToken(user);
 
       //Get upgrades from json and populate the model
       const fileData = await fs.readFile("./seeds/upgrades.json");
       const upgrades = JSON.parse(fileData).upgrades;
-
+      const gameName = args.username + "'s Game";
       const newGame = {
         score: 0,
+        name: gameName,
         upgrades: upgrades,
       };
+
       await User.findOneAndUpdate(
         { username: args.username },
         {

@@ -16,14 +16,14 @@ import {
 import { setContext } from "@apollo/client/link/context";
 let httpLink;
 // Construct our main GraphQL API endpoint
-if (process.env.NODE_ENV === "develop") {
+if (process.env.NODE_ENV === "production") {
   httpLink = createHttpLink({
-    uri: "http://localhost:3001/graphql",
+    uri: "https://frederick-the-penguin.herokuapp.com/graphql",
     //uri: "/graphql",
   });
 } else {
   httpLink = createHttpLink({
-    uri: "https://frederick-the-penguin.herokuapp.com/graphql",
+    uri: "http://localhost:3001/graphql",
     //uri: "/graphql",
   });
 }

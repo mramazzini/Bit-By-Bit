@@ -4,14 +4,18 @@ const upgradeSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-
+    unique: false,
     trim: true,
   },
   status: {
     type: String,
-    required: true,
+
     enum: ["shown", "purchased", "hidden"],
     default: "hidden",
+  },
+  description: {
+    type: String,
+    required: true,
   },
   flavor: {
     type: String,

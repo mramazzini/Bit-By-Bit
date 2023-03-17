@@ -41,6 +41,7 @@ function Home() {
     return "ERROR!";
   } else {
     if (!initialized) {
+      console.log(loading);
       setScore(gameData.game.score);
       setInitialized(true);
     }
