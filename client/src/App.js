@@ -14,13 +14,19 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-
+let httpLink;
 // Construct our main GraphQL API endpoint
-const httpLink = createHttpLink({
-  uri: "http://localhost:3001/graphql",
-  //uri: "/graphql",
-});
-
+if (process.env.NODE_ENV === "develop") {
+  httpLink = createHttpLink({
+    uri: "http://localhost:3001/graphql",
+    //uri: "/graphql",
+  });
+} else {
+  httpLink = createHttpLink({
+    uri: "http://frederick-the-penguin.herokuapp.com/graphql",
+    //uri: "/graphql",
+  });
+}
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
