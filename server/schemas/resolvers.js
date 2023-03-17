@@ -31,7 +31,13 @@ const resolvers = {
       const token = signToken(user);
 
       //Get upgrades from json and populate the model
-      const fileData = await fs.readFile("./seeds/upgrades.json");
+      await fs.readFile("./seeds/upgrades.json", "utf8", (err, data) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        const fileData = data;
+      });
       const upgrades = JSON.parse(fileData).upgrades;
       const gameName = args.username + "'s Game";
       const newGame = {
