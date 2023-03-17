@@ -26,7 +26,7 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
-      console.log(process.cwd());
+      console.log(__dirname);
       const token = signToken(user);
       let fileData;
       //Get upgrades from json and populate the model
@@ -36,7 +36,9 @@ const resolvers = {
           return;
         }
         fileData = data;
+        console.log(data);
       });
+
       const upgrades = JSON.parse(fileData).upgrades;
       const gameName = args.username + "'s Game";
       const newGame = {
