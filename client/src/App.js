@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === "develop") {
   });
 } else {
   httpLink = createHttpLink({
-    uri: "http://frederick-the-penguin.herokuapp.com/graphql",
+    uri: "https://frederick-the-penguin.herokuapp.com/graphql",
     //uri: "/graphql",
   });
 }
