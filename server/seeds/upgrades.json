@@ -3,23 +3,34 @@
     {
       "name": "Stick",
       "status": "shown",
-      "decription": "Sturdy",
+      "decription": "Doubles your bonk multiplier",
       "flavor": "Bonk",
-      "effect": "Doubles your clicking power"
+      "effect": "bonk_multiplier_2",
+      "price": 10
     },
     {
       "name": "Another Stick",
-      "status": "shown",
-      "decription": "Very Sturdy",
+      "status": "hidden",
+      "decription": "Doubles your bonk multiplier",
       "flavor": "Boooonk",
-      "effect": "Doubles your clicking power"
+      "effect": "bonk_multiplier_2",
+      "price": 100
     },
     {
       "name": "A third Stick",
-      "status": "shown",
-      "decription": "Threes a crowd",
+      "status": "hidden",
+      "decription": "Doubles your bonk multiplier",
       "flavor": "BoOOOOONk",
-      "effect": "Doubles your clicking power"
+      "effect": "bonk_multiplier_2",
+      "price": 1000
+    },
+    {
+      "name": "Snowy Trek",
+      "status": "hidden",
+      "decription": "Unlocks the Snow Biome",
+      "flavor": "Jingle bells",
+      "effect": "biome_unlock_snow",
+      "price": 200
     }
   ]
 }

@@ -27,6 +27,7 @@ const typeDefs = gql`
     status: String!
     effect: String!
     description: String!
+    price: Int!
   }
 
   type Query {
