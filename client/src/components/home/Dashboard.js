@@ -14,19 +14,19 @@ const Dashboard = ({ score }) => {
       <ul className="dashboard-nav">
         <li
           className={`dashboard-nav-item ${
-            activeTab === "editor" ? "active" : ""
-          }`}
-          onClick={() => handleTabClick("adventure")}
-        >
-          Adventure
-        </li>
-        <li
-          className={`dashboard-nav-item ${
             activeTab === "upgrades" ? "active" : ""
           }`}
           onClick={() => handleTabClick("upgrades")}
         >
           Upgrades
+        </li>
+        <li
+          className={`dashboard-nav-item ${
+            activeTab === "adventure" ? "active" : ""
+          }`}
+          onClick={() => handleTabClick("adventure")}
+        >
+          Adventure
         </li>
         <li
           className={`dashboard-nav-item ${
