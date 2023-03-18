@@ -25,7 +25,7 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
+  user-select: none;
   flex-direction: column;
 }
 .clicker-score {
@@ -129,9 +129,10 @@
 }
 
 .store-item {
-  width: 10vw;
-  height: 10vw;
-  margin: 10px;
+  width: 150px;
+  height: 150px;
+  margin: 8px;
+  line-height: 0.75rem;
 
   background-color: orange;
 }

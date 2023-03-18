@@ -3,7 +3,7 @@ import { useState } from "react";
 import "../../styles/Home.css";
 import UpgradesStore from "./UpgradesStore";
 import AdventureTabs from "./AdventureTabs";
-const Dashboard = ({ score }) => {
+const Dashboard = ({ score, updateScore }) => {
   const [activeTab, setActiveTab] = useState("tab1");
 
   const handleTabClick = (tabName) => {
@@ -40,7 +40,9 @@ const Dashboard = ({ score }) => {
       <div className="top-divider"></div>
       <div className="dashboard-body">
         {activeTab === "adventure" && <AdventureTabs />}
-        {activeTab === "upgrades" && <UpgradesStore />}
+        {activeTab === "upgrades" && (
+          <UpgradesStore score={score} updateScore={updateScore} />
+        )}
         {activeTab === "tab3" && <div>Content for Tab 3</div>}
       </div>
     </div>

@@ -15,6 +15,13 @@ export const GET_UPGRADES = gql`
       status
       flavor
       effect
+      description
+      price
     }
+  }
+`;
+export const GET_CLICK_MULTIPLIER = gql`
+  query clickMultiplier {
+    clickMultiplier
   }
 `;

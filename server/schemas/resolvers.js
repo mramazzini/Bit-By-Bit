@@ -18,8 +18,27 @@ const resolvers = {
     },
     upgrades: async (parent, args, context) => {
       const user = await User.findOne({ _id: context.user._id });
-      console.log(user);
+
       return user.game.upgrades;
+    },
+    clickMultiplier: async (parent, args, context) => {
+      //find users purcahsed upgrades and return the final click multiplier
+
+      const user = await User.findOne({ _id: context.user._id });
+
+      const upgrades = user.game.upgrades;
+      let bonk_multiplier = 1;
+
+      upgrades.forEach((upgrade) => {
+        if (
+          upgrade.effect === "bonk_multiplier_2" &&
+          upgrade.status === "purchased"
+        ) {
+          bonk_multiplier *= 2;
+        }
+      });
+
+      return bonk_multiplier;
     },
   },
 
@@ -94,16 +113,29 @@ const resolvers = {
       return user;
     },
 
-    purchaseUpgrade: async (parent, { name }, context) => {
-      const user = await User.findOneAndUpdate(
-        {
-          _id: context.user._id,
-          "game.upgrades": { $elemMatch: { name: name } },
-        },
-        { $set: { "game.upgrades.$.status": "purchased" } },
-        { new: true }
-      );
-      return "purchased";
+    purchaseUpgrade: async (parent, { name, price, score }, context) => {
+      // check if user can afford upgrade
+      console.log(score, price);
+      if (score >= price) {
+        const user = await User.findOneAndUpdate(
+          {
+            _id: context.user._id,
+            "game.upgrades": { $elemMatch: { name: name } },
+          },
+          {
+            $set: {
+              "game.upgrades.$.status": "purchased",
+              "game.score": score - price,
+            },
+          },
+
+          { new: true }
+        );
+        console.log(user);
+        return "purchased";
+      } else {
+        return "not enough score";
+      }
     },
   },
 };

@@ -51,7 +51,7 @@ function Home() {
         <Clicker onInputChange={updateScore} score={score} />
 
         <div className="home-divider"></div>
-        <Dashboard score={score} />
+        <Dashboard score={score} updateScore={updateScore} />
       </div>
     );
   }

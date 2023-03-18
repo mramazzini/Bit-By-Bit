@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_UPGRADES } from "../utils/queries";
-import { PURCHASE_UPGRADE } from "../utils/mutations";
+import { PURCHASE_UPGRADE, UPDATE_GAME } from "../utils/mutations";
 
-const UpgradesStore = () => {
+const UpgradesStore = ({ score, updateScore }) => {
   const { loading, error, data, refetch } = useQuery(GET_UPGRADES);
+  const [updateGame] = useMutation(UPDATE_GAME);
   const [purchaseUpgrade] = useMutation(PURCHASE_UPGRADE);
   const [initialized, setInitialized] = useState(false);
   const [upgrades, setUpgrades] = useState();
-  const handlePurchase = async (name) => {
+  const handlePurchase = async (name, price, index) => {
     //Find index of the purchased upgrade
     const upgradedIndex = data.upgrades.findIndex(
       (upgrade) => upgrade.name === name
@@ -16,12 +17,38 @@ const UpgradesStore = () => {
 
     //Send api mutation to update database
     try {
-      await purchaseUpgrade({
+      //Update score in database
+      await updateGame({
         variables: {
-          name: data.upgrades[upgradedIndex].name,
+          score: score,
         },
       });
-      console.log(data.upgrades[upgradedIndex].name, "Upgrade Purchased");
+
+      const upgradeResponse = await purchaseUpgrade({
+        variables: {
+          name: data.upgrades[upgradedIndex].name,
+          price: price,
+          score: score,
+        },
+      });
+      if (!upgradeResponse) {
+        throw new Error("Purchase failed");
+      } else if (upgradeResponse.data.purchaseUpgrade === "purchased") {
+        console.log(data.upgrades[upgradedIndex].name, "Upgrade Purchased");
+        //Update score in state
+        updateScore(score - price);
+        //Remove the div with the clicked key index
+        setUpgrades((prevUpgrades) => {
+          const newUpgrades = [...prevUpgrades];
+          newUpgrades.splice(index, 1);
+          return newUpgrades;
+        });
+      } else {
+        console.log(
+          data.upgrades[upgradedIndex].name,
+          "Cant afford upgrade/Error purchasing"
+        );
+      }
     } catch (e) {
       console.error("Error Purchasing upgrade");
       console.error(e);
@@ -46,11 +73,14 @@ const UpgradesStore = () => {
             <div key={index}>
               <button
                 className="store-item"
-                onClick={() => handlePurchase(upgrade.name)}
+                onClick={() =>
+                  handlePurchase(upgrade.name, upgrade.price, index)
+                }
               >
                 <h3>{upgrade.name}</h3>
-                <p>{upgrade.effect}</p>
+                <p>{upgrade.description}</p>
                 <p> {upgrade.flavor}</p>
+                <p>Cost: {upgrade.price}</p>
               </button>
             </div>
           ) : null
