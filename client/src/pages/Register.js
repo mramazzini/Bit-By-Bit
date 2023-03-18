@@ -3,7 +3,7 @@ import Register from "../components/register/RegisterComponent";
 
 const RegisterPage = () => {
   return (
-    <div className="App">
+    <div className="register-page">
       <Register />
     </div>
   );

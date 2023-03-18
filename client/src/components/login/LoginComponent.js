@@ -30,14 +30,14 @@ const LoginComponent = () => {
     });
   };
   return (
-    <div className="auth-form-container">
+    <div className="login-container">
       <h2>Login</h2>
       <form className="login-form" onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">Username/Email</label>
         <input
           onChange={handleChange}
           type="email"
-          placeholder="example@email.com"
+          placeholder=""
           id="email"
           name="email"
         />
@@ -45,7 +45,7 @@ const LoginComponent = () => {
         <input
           onChange={handleChange}
           type="password"
-          placeholder="*********"
+          placeholder=""
           id="password"
           name="password"
         />
