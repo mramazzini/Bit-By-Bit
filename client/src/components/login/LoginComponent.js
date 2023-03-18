@@ -18,7 +18,7 @@ const LoginComponent = () => {
       Auth.login(token);
       navigate("/");
     } catch (e) {
-      console.log(e);
+      Auth.handleError(e);
     }
   };
 
@@ -36,8 +36,8 @@ const LoginComponent = () => {
         <label htmlFor="email">Username/Email</label>
         <input
           onChange={handleChange}
-          type="email"
-          placeholder=""
+          type=""
+          placeholder="Username/Email"
           id="email"
           name="email"
         />
@@ -45,7 +45,7 @@ const LoginComponent = () => {
         <input
           onChange={handleChange}
           type="password"
-          placeholder=""
+          placeholder="********"
           id="password"
           name="password"
         />
