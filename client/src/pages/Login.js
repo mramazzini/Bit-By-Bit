@@ -1,6 +1,6 @@
 // import { useRef, useState, useEffect } from 'react';
 import React, { useState } from "react";
-
+import "../styles/Login.css";
 import LoginComponent from "../components/login/LoginComponent";
 
 const Login = () => {

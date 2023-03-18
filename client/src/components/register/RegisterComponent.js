@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import Auth from "../utils/auth";
 import { ADD_USER } from "../utils/mutations";
 import { useNavigate } from "react-router-dom";
-
+import "../../styles/Register.css";
 const RegisterComponent = () => {
   const [formState, setFormState] = useState({ email: "", password: "" });
   const [addUser] = useMutation(ADD_USER);
@@ -38,15 +38,15 @@ const RegisterComponent = () => {
   };
 
   return (
-    <div className="auth-form-container">
+    <div className="register-container">
       <h2>Register</h2>
       <form className="register-form" onSubmit={handleSubmit}>
-        <label htmlFor="name">Full Name</label>
+        <label htmlFor="name">Username</label>
         <input
           onChange={handleChange}
           name="username"
           id="username"
-          placeholder="UserName"
+          placeholder="Username"
         />
         <label htmlFor="email">Email</label>
         <input
