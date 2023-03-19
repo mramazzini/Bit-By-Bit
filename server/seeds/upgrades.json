@@ -5,24 +5,30 @@
       "status": "shown",
       "description": "Doubles your bonk multiplier",
       "flavor": "Bonk",
-      "effect": "bonk_multiplier_2",
-      "price": 10
+      "effect": "click_multiplier_2",
+      "price": 10,
+      "dependencies": [],
+      "unlocks": ["Another Stick"]
     },
     {
       "name": "Another Stick",
       "status": "hidden",
       "description": "Doubles your bonk multiplier",
       "flavor": "Boooonk",
-      "effect": "bonk_multiplier_2",
-      "price": 100
+      "effect": "click_multiplier_2",
+      "price": 100,
+      "dependencies": ["Stick"],
+      "unlocks": ["A Third Stick", "Snowy Trek"]
     },
     {
-      "name": "A third Stick",
+      "name": "A Third Stick",
       "status": "hidden",
       "description": "Doubles your bonk multiplier",
       "flavor": "BoOOOOONk",
-      "effect": "bonk_multiplier_2",
-      "price": 1000
+      "effect": "click_multiplier_2",
+      "price": 1000,
+      "dependencies": ["Another Stick"],
+      "unlocks": []
     },
     {
       "name": "Snowy Trek",
@@ -30,7 +36,9 @@
       "description": "Unlocks the Snow Biome",
       "flavor": "Jingle bells",
       "effect": "biome_unlock_snow",
-      "price": 200
+      "price": 200,
+      "dependencies": ["Another Stick"],
+      "unlocks": []
     }
   ]
 }

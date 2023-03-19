@@ -5,13 +5,13 @@ function Navbar() {
   return (
     <div className="navbar">
       <div className="link-holder">
-        <Link
+        {/* <Link
           className="patreon-link"
           to="https://patreon.com/user?u=90456358"
           target="_blank"
         >
           Patreon
-        </Link>
+        </Link> */}
         <Link
           className="discord-link"
           to="https://discord.gg/Vm3fc7yAYC"

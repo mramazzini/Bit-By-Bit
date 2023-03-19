@@ -4,6 +4,7 @@ export const GET_GAME = gql`
   query game {
     game {
       score
+      click_multiplier
     }
   }
 `;
@@ -17,6 +18,7 @@ export const GET_UPGRADES = gql`
       effect
       description
       price
+      dependencies
     }
   }
 `;

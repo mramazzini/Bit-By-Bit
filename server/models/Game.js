@@ -9,6 +9,10 @@ const gameSchema = new mongoose.Schema({
     default: 0,
   },
   upgrades: [upgradeSchema],
+  click_multiplier: {
+    type: Number,
+    default: 1,
+  },
 });
 
 module.exports = gameSchema;

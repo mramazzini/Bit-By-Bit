@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_UPGRADES } from "../utils/queries";
 import { PURCHASE_UPGRADE, UPDATE_GAME } from "../utils/mutations";
 
-const UpgradesStore = ({ score, updateScore }) => {
+const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
   const { loading, error, data, refetch } = useQuery(GET_UPGRADES);
   const [updateGame] = useMutation(UPDATE_GAME);
   const [purchaseUpgrade] = useMutation(PURCHASE_UPGRADE);
@@ -29,6 +29,8 @@ const UpgradesStore = ({ score, updateScore }) => {
           name: data.upgrades[upgradedIndex].name,
           price: price,
           score: score,
+          effect: data.upgrades[upgradedIndex].effect,
+          dependencies: data.upgrades[upgradedIndex].dependencies,
         },
       });
       if (!upgradeResponse) {
@@ -43,6 +45,10 @@ const UpgradesStore = ({ score, updateScore }) => {
           newUpgrades.splice(index, 1);
           return newUpgrades;
         });
+        //Update click multiplier in state
+        updateClickMultiplier(
+          parseInt(data.upgrades[upgradedIndex].effect.substring(17))
+        );
       } else {
         console.log(
           data.upgrades[upgradedIndex].name,

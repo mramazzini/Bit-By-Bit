@@ -21,25 +21,6 @@ const resolvers = {
 
       return user.game.upgrades;
     },
-    clickMultiplier: async (parent, args, context) => {
-      //find users purcahsed upgrades and return the final click multiplier
-
-      const user = await User.findOne({ _id: context.user._id });
-
-      const upgrades = user.game.upgrades;
-      let bonk_multiplier = 1;
-
-      upgrades.forEach((upgrade) => {
-        if (
-          upgrade.effect === "bonk_multiplier_2" &&
-          upgrade.status === "purchased"
-        ) {
-          bonk_multiplier *= 2;
-        }
-      });
-
-      return bonk_multiplier;
-    },
   },
 
   Mutation: {
@@ -64,6 +45,7 @@ const resolvers = {
         score: 0,
         name: gameName,
         upgrades: await upgrades,
+        click_multiplier: 1,
       };
 
       await User.findOneAndUpdate(
@@ -113,11 +95,33 @@ const resolvers = {
       return user;
     },
 
-    purchaseUpgrade: async (parent, { name, price, score }, context) => {
+    purchaseUpgrade: async (
+      parent,
+      { name, price, score, effect, dependencies },
+      context
+    ) => {
       // check if user can afford upgrade
-      console.log(score, price);
-      if (score >= price) {
-        const user = await User.findOneAndUpdate(
+      const user = await User.findOne({ _id: context.user._id });
+
+      //find the required dependencies
+      const upgradesWithDependencies = user.game.upgrades.filter((upgrade) =>
+        dependencies.includes(upgrade.name)
+      );
+
+      // Filter upgrades that have status field equal to "purchased"
+      const allPurchased = upgradesWithDependencies.every(
+        (upgrade) => upgrade.status === "purchased"
+      );
+
+      //If user can afford it and all the dependencies are purchased
+      if (score >= price && allPurchased) {
+        //If user purcahsed click upgrade, update click multiplier
+        if (effect.substring(0, 16) === "click_multiplier") {
+          var bonk_multiplier = parseInt(effect.substring(17));
+        }
+
+        //Purchase the upgrade
+        await User.findOneAndUpdate(
           {
             _id: context.user._id,
             "game.upgrades": { $elemMatch: { name: name } },
@@ -127,11 +131,33 @@ const resolvers = {
               "game.upgrades.$.status": "purchased",
               "game.score": score - price,
             },
+            $mul: {
+              "game.click_multiplier": bonk_multiplier,
+            },
           },
 
           { new: true }
         );
-        console.log(user);
+
+        //Find the purchased upgrade unlocks and set their status to shown
+        const purchasedUpgrade = user.game.upgrades.find(
+          (upgrade) => upgrade.name === name
+        );
+        console.log("PU", purchasedUpgrade);
+        const upgradesWithUnlocks = user.game.upgrades.filter((upgrade) =>
+          purchasedUpgrade.unlocks.includes(upgrade.name)
+        );
+        console.log("UU", upgradesWithUnlocks);
+        upgradesWithUnlocks.forEach(async (upgrade) => {
+          await User.findOneAndUpdate(
+            {
+              _id: context.user._id,
+              "game.upgrades": { $elemMatch: { name: upgrade.name } },
+            },
+            { $set: { "game.upgrades.$.status": "shown" } }
+          );
+        });
+
         return "purchased";
       } else {
         return "not enough score";

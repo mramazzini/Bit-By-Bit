@@ -19,6 +19,7 @@ const typeDefs = gql`
   type Game {
     score: Int
     upgrades: [Upgrade]
+    click_multiplier: Int
   }
 
   type Upgrade {
@@ -28,6 +29,8 @@ const typeDefs = gql`
     effect: String!
     description: String!
     price: Int!
+    dependencies: [String]
+    unlocks: [String]
   }
 
   type Query {
@@ -35,14 +38,20 @@ const typeDefs = gql`
     user(username: String!): User
     game: Game
     upgrades: [Upgrade]
-    clickMultiplier: Int
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     updateGame(score: Int!): Game
-    purchaseUpgrade(name: String!, score: Int!, price: Int!): String
+    purchaseUpgrade(
+      name: String!
+      score: Int!
+      price: Int!
+      effect: String!
+      dependencies: [String]
+      unlocks: [String]
+    ): String
   }
 `;
 
