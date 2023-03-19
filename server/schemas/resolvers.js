@@ -116,8 +116,9 @@ const resolvers = {
       //If user can afford it and all the dependencies are purchased
       if (score >= price && allPurchased) {
         //If user purcahsed click upgrade, update click multiplier
+        let bonk_multiplier = 1;
         if (effect.substring(0, 16) === "click_multiplier") {
-          var bonk_multiplier = parseInt(effect.substring(17));
+          bonk_multiplier = parseInt(effect.substring(17));
         }
 
         //Purchase the upgrade
@@ -143,11 +144,11 @@ const resolvers = {
         const purchasedUpgrade = user.game.upgrades.find(
           (upgrade) => upgrade.name === name
         );
-        console.log("PU", purchasedUpgrade);
+
         const upgradesWithUnlocks = user.game.upgrades.filter((upgrade) =>
           purchasedUpgrade.unlocks.includes(upgrade.name)
         );
-        console.log("UU", upgradesWithUnlocks);
+
         upgradesWithUnlocks.forEach(async (upgrade) => {
           await User.findOneAndUpdate(
             {

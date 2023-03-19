@@ -10,11 +10,12 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
   const [initialized, setInitialized] = useState(false);
   const [upgrades, setUpgrades] = useState();
   const handlePurchase = async (name, price, index) => {
+    const upgradeArray = data.upgrades;
     //Find index of the purchased upgrade
-    const upgradedIndex = data.upgrades.findIndex(
+    const upgradedIndex = upgradeArray.findIndex(
       (upgrade) => upgrade.name === name
     );
-
+    const purchasedUpgrade = upgradeArray[upgradedIndex];
     //Send api mutation to update database
     try {
       //Update score in database
@@ -26,17 +27,17 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
 
       const upgradeResponse = await purchaseUpgrade({
         variables: {
-          name: data.upgrades[upgradedIndex].name,
+          name: purchasedUpgrade.name,
           price: price,
           score: score,
-          effect: data.upgrades[upgradedIndex].effect,
-          dependencies: data.upgrades[upgradedIndex].dependencies,
+          effect: purchasedUpgrade.effect,
+          dependencies: purchasedUpgrade.dependencies,
         },
       });
       if (!upgradeResponse) {
         throw new Error("Purchase failed");
       } else if (upgradeResponse.data.purchaseUpgrade === "purchased") {
-        console.log(data.upgrades[upgradedIndex].name, "Upgrade Purchased");
+        console.log(purchasedUpgrade.name, "Upgrade Purchased");
         //Update score in state
         updateScore(score - price);
         //Remove the div with the clicked key index
@@ -46,9 +47,14 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
           return newUpgrades;
         });
         //Update click multiplier in state
-        updateClickMultiplier(
-          parseInt(data.upgrades[upgradedIndex].effect.substring(17))
-        );
+        if (purchasedUpgrade.effect.includes("click_multiplier")) {
+          updateClickMultiplier(
+            parseInt(purchasedUpgrade.effect.substring(17))
+          );
+        } else if (purchaseUpgrade.effect.includes("biome_unlock")) {
+          //Unlock biome
+          console.log(purchasedUpgrade.effect.substring(13));
+        }
       } else {
         console.log(
           data.upgrades[upgradedIndex].name,

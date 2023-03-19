@@ -18,8 +18,8 @@ function Home() {
     setScore(score);
   };
 
-  const updateClickMultiplier = async (clickMultiplier) => {
-    setClickMultiplier(clickMultiplier);
+  const updateClickMultiplier = async (multiplier) => {
+    setClickMultiplier(clickMultiplier * multiplier);
   };
 
   //AutoSave game every 30 seconds into database

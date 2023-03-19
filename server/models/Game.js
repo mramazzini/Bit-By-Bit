@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const upgradeSchema = require("./Upgrades");
+const biomeSchema = require("./Biomes");
 const gameSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -8,11 +9,13 @@ const gameSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  upgrades: [upgradeSchema],
+
   click_multiplier: {
     type: Number,
     default: 1,
   },
+  upgrades: [upgradeSchema],
+  biomes: [biomeSchema],
 });
 
 module.exports = gameSchema;
