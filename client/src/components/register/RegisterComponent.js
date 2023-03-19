@@ -25,7 +25,7 @@ const RegisterComponent = () => {
       Auth.login(token);
       navigate("/");
     } catch (e) {
-      console.log(e);
+      Auth.handleError(e);
     }
   };
 

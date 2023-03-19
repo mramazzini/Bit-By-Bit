@@ -29,6 +29,14 @@ const upgradeSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  dependencies: {
+    type: [String],
+    required: true,
+  },
+  unlocks: {
+    type: [String],
+    required: true,
+  },
 });
 
 module.exports = upgradeSchema;

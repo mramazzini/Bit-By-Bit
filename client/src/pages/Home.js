@@ -9,12 +9,17 @@ import { GET_GAME } from "../components/utils/queries";
 
 function Home() {
   const [updateGame] = useMutation(UPDATE_GAME);
+  const [clickMultiplier, setClickMultiplier] = useState(1);
   const [initialized, setInitialized] = useState(false);
   const [score, setScore] = useState(0);
   const { loading, error, data: gameData } = useQuery(GET_GAME);
 
   const updateScore = async (score) => {
     setScore(score);
+  };
+
+  const updateClickMultiplier = async (clickMultiplier) => {
+    setClickMultiplier(clickMultiplier);
   };
 
   //AutoSave game every 30 seconds into database
@@ -43,15 +48,25 @@ function Home() {
     if (!initialized) {
       console.log(loading);
       setScore(gameData.game.score);
+      setClickMultiplier(gameData.game.click_multiplier);
       setInitialized(true);
     }
     return (
       <div className="home-page">
         <Navbar />
-        <Clicker onInputChange={updateScore} score={score} />
+        <Clicker
+          onInputChange={updateScore}
+          score={score}
+          clickMultiplier={clickMultiplier}
+        />
 
         <div className="home-divider"></div>
-        <Dashboard score={score} />
+        <Dashboard
+          score={score}
+          updateScore={updateScore}
+          clickMultiplier={clickMultiplier}
+          updateClickMultiplier={updateClickMultiplier}
+        />
       </div>
     );
   }

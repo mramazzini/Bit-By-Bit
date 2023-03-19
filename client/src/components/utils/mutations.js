@@ -31,7 +31,19 @@ export const UPDATE_GAME = gql`
 `;
 
 export const PURCHASE_UPGRADE = gql`
-  mutation purchaseUpgrade($name: String!) {
-    purchaseUpgrade(name: $name)
+  mutation purchaseUpgrade(
+    $name: String!
+    $score: Int!
+    $price: Int!
+    $effect: String!
+    $dependencies: [String!]!
+  ) {
+    purchaseUpgrade(
+      name: $name
+      score: $score
+      price: $price
+      effect: $effect
+      dependencies: $dependencies
+    )
   }
 `;

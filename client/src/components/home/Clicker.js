@@ -2,14 +2,21 @@ import React from "react";
 import "../../styles/Home.css";
 import useSound from "use-sound";
 import boopSfx from "../../assets/boop.wav";
+
 function Clicker(props) {
-  const [score, setScore] = React.useState(props.score);
   const [isActive, setIsActive] = React.useState(false);
+
   const [play] = useSound(boopSfx);
-  const updateScore = () => {
+  const updateScore = async () => {
+    //Sound
     play();
-    setScore(score + 1);
-    props.onInputChange(score);
+    console.log(props.clickMultiplier);
+    //Score
+
+    //update score in parent component
+    await props.onInputChange(props.score + 1 * props.clickMultiplier);
+
+    //Animation
     setIsActive(true);
     setTimeout(() => {
       setIsActive(false);

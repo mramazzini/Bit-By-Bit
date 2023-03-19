@@ -19,6 +19,7 @@ const typeDefs = gql`
   type Game {
     score: Int
     upgrades: [Upgrade]
+    click_multiplier: Int
   }
 
   type Upgrade {
@@ -28,6 +29,8 @@ const typeDefs = gql`
     effect: String!
     description: String!
     price: Int!
+    dependencies: [String]
+    unlocks: [String]
   }
 
   type Query {
@@ -41,7 +44,14 @@ const typeDefs = gql`
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     updateGame(score: Int!): Game
-    purchaseUpgrade(name: String!): String
+    purchaseUpgrade(
+      name: String!
+      score: Int!
+      price: Int!
+      effect: String!
+      dependencies: [String]
+      unlocks: [String]
+    ): String
   }
 `;
 

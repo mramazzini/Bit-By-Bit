@@ -39,6 +39,20 @@ class AuthService {
     // Clear user token and profile data from localStorage
     localStorage.removeItem("id_token");
   }
+
+  handleError(error) {
+    const err = error.message;
+    console.error(err);
+    if (err === "No user found") {
+      alert("User does not exist");
+    } else if (err === "Incorrect password") {
+      alert("Invalid password");
+    } else if (err.substring(0, 6) === "E11000") {
+      alert("User already exists with that email or username");
+    } else {
+      alert("An error occurred");
+    }
+  }
 }
 
 export default new AuthService();
