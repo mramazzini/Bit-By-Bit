@@ -36,7 +36,7 @@ function Home() {
         console.error("Error Autosaving");
         console.error(e);
       }
-    }, 10000);
+    }, 30000);
     return () => clearInterval(intervalId);
   }, [score]);
 

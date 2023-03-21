@@ -1,10 +1,10 @@
 import React from "react";
 
-const BiomeUpgrade = ({ biome, upgrade }) => {
+const Farm = ({ biome, upgrade }) => {
   return (
     <div className={`${biome}-biome-upgrade biome-upgrade`}>
       <header className="upgrade-header">{upgrade.name}</header>
-      <image className={`${biome}-upgrade-image upgrade-image`}></image>
+      <div className={`${biome}-upgrade-image upgrade-image`}></div>
       <div className="upgrade-body">
         <div className="upgrade-description">{upgrade.description}</div>
         <div className="upgrade-cost">{upgrade.cost}</div>
@@ -14,4 +14,4 @@ const BiomeUpgrade = ({ biome, upgrade }) => {
   );
 };
 
-export default BiomeUpgrade;
+export default Farm;

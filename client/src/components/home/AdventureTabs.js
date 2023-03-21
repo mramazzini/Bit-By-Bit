@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_BIOMES } from "../utils/queries";
-import Snow from "./biomes/Snow";
+import Biome from "./biomes/Biome";
 const AdventureTabs = (refreshBiome) => {
   const { loading, error, data, refetch } = useQuery(GET_BIOMES);
   const ACTIVE_TAB_KEY = "activeTab";
@@ -37,7 +37,7 @@ const AdventureTabs = (refreshBiome) => {
         </div>
         <div className="adventure-body">
           {activeTab === "" && <div>Click a biome to begin</div>}
-          {activeTab === "snow" && <Snow />}
+          {activeTab === "snow" && <Biome biomeData={biomes[0]} />}
         </div>
       </div>
     );

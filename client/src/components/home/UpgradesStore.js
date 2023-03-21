@@ -62,7 +62,6 @@ const UpgradesStore = ({
         } else if (purchasedUpgrade.effect.includes("biome_unlock")) {
           //Unlock biome
           console.log(purchasedUpgrade.effect.substring(13));
-          unlockBiome(purchasedUpgrade.effect.substring(13));
         }
       } else {
         console.log(

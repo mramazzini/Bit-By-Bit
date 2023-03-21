@@ -32,6 +32,14 @@ export const GET_BIOMES = gql`
     biomes {
       completion_percentage
       name
+      farms {
+        name
+        flavor
+        status
+        description
+        cost
+        level
+      }
     }
   }
 `;
