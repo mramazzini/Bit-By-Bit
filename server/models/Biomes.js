@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
-
+const farmSchema = require("./Farms");
 const biomeSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  farms: [farmSchema],
   currency: {
     amount: {
       type: Number,

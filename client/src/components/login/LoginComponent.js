@@ -15,12 +15,14 @@ const LoginComponent = () => {
         variables: { email: formState.email, password: formState.password },
       });
       const token = mutationResponse.data.login.token;
+
+      //Clear the local storage before setting the new token (needed to prevent a bug)
+      await localStorage.clear();
       Auth.login(token);
 
+      // Reload the page to update the state of the user
       navigate("/");
-      // IMPORTANT Reload the page to update the state of the user
-      localStorage.clear();
-      window.location.reload();
+      await window.location.reload();
     } catch (e) {
       Auth.handleError(e);
     }

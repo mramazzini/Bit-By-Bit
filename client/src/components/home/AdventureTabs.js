@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_BIOMES } from "../utils/queries";
-import Snow from "./Biomes/Snow";
+import Snow from "./biomes/Snow";
 const AdventureTabs = (refreshBiome) => {
   const { loading, error, data, refetch } = useQuery(GET_BIOMES);
   const ACTIVE_TAB_KEY = "activeTab";

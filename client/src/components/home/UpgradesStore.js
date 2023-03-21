@@ -79,7 +79,7 @@ const UpgradesStore = ({
   if (loading) {
     return "Loading...";
   } else if (error) {
-    return "ERROR!";
+    return "Error, try refreshing the page";
   } else if (!initialized) {
     setInitialized(true);
     setUpgrades(data.upgrades);

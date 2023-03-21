@@ -1,5 +1,5 @@
 import React from "react";
-
+import "../../../styles/Biome.css";
 const Biome = ({ biome }) => {
   console.log(biome);
   return (

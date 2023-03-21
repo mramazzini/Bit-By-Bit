@@ -43,7 +43,7 @@ function Home() {
   if (loading) {
     return "Loading...";
   } else if (error) {
-    return "ERROR!";
+    return "Error, try refreshing the page";
   } else {
     if (!initialized) {
       setScore(gameData.game.score);

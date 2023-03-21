@@ -1,26 +1,31 @@
 import React from "react";
 import Biome from "./Biome";
-import "../../../styles/biomes/Snow.css";
-
+import BiomeUpgrade from "./BiomeUpgrade";
 const Snow = () => {
-  const createHeader = (name) => {
-    return <header className="upgrade-header">{name}</header>;
-  };
   const snowPeck = () => {
-    return (
-      <div className="snow-biome-upgrade">{createHeader("Peck for Snow")}</div>
-    );
+    const upgrade = {
+      name: "Peck",
+      description: "Peck at the snow to get some snowflakes",
+      cost: 10,
+    };
+    return <BiomeUpgrade biome="snow" upgrade={upgrade}></BiomeUpgrade>;
   };
 
   const snowBall = () => {
-    return (
-      <div className="snow-biome-upgrade">{createHeader("Make Snowballs")}</div>
-    );
+    const upgrade = {
+      name: "Snowballs",
+      description: "Make some snowballs",
+      cost: 10,
+    };
+    return <BiomeUpgrade biome="snow" upgrade={upgrade}></BiomeUpgrade>;
   };
   const shovelSnow = () => {
-    return (
-      <div className="snow-biome-upgrade">{createHeader("Dig for Snow")}</div>
-    );
+    const upgrade = {
+      name: "Shovel Snow",
+      description: "Perhaps a tool was a good idea",
+      cost: 10,
+    };
+    return <BiomeUpgrade biome="snow" upgrade={upgrade}></BiomeUpgrade>;
   };
 
   return (
