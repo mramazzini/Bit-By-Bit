@@ -21,6 +21,10 @@ const resolvers = {
 
       return user.game.upgrades;
     },
+    biomes: async (parent, args, context) => {
+      const user = await User.findOne({ _id: context.user._id });
+      return user.game.biomes;
+    },
   },
 
   Mutation: {
@@ -35,7 +39,7 @@ const resolvers = {
       } else {
         directoryPath = "./seeds/upgrades.json";
       }
-      console.log(directoryPath);
+
       //Get upgrades from json and populate the model
       const fileData = await fs.readFile(directoryPath, "utf8");
 
@@ -46,6 +50,7 @@ const resolvers = {
         name: gameName,
         upgrades: await upgrades,
         click_multiplier: 1,
+        biomes: [],
       };
 
       await User.findOneAndUpdate(
@@ -95,15 +100,32 @@ const resolvers = {
       return user;
     },
 
-    purchaseUpgrade: async (
-      parent,
-      { name, price, score, effect, dependencies },
-      context
-    ) => {
+    purchaseUpgrade: async (parent, { name, score }, context) => {
       // check if user can afford upgrade
       const user = await User.findOne({ _id: context.user._id });
 
-      //find the required dependencies
+      //Get directories for JSON seed files depending on environment
+      let directoryPathUpgrades;
+      let directoryPathBiomes;
+      if (process.env.NODE_ENV === "production") {
+        directoryPathUpgrades = "server/seeds/upgrades.json";
+        directoryPathBiomes = "server/seeds/biomes.json";
+      } else {
+        directoryPathUpgrades = "./seeds/upgrades.json";
+        directoryPathBiomes = "./seeds/biomes.json";
+      }
+
+      //Get upgrades from json
+      const fileDataUpgrades = await fs.readFile(directoryPathUpgrades, "utf8");
+      const upgrades = await JSON.parse(fileDataUpgrades).upgrades;
+
+      //Get the upgrade that was purchased
+      const purchasedUpgrade = await upgrades.find((obj) => obj.name === name);
+
+      //Get the variables of the upgrade
+      const { price, effect, dependencies, unlocks } = await purchasedUpgrade;
+
+      //find the required dependencies to see if user can purchase the upgrade
       const upgradesWithDependencies = user.game.upgrades.filter((upgrade) =>
         dependencies.includes(upgrade.name)
       );
@@ -116,38 +138,58 @@ const resolvers = {
       //If user can afford it and all the dependencies are purchased
       if (score >= price && allPurchased) {
         //If user purcahsed click upgrade, update click multiplier
+        let bonk_multiplier = 1;
         if (effect.substring(0, 16) === "click_multiplier") {
-          var bonk_multiplier = parseInt(effect.substring(17));
+          bonk_multiplier = parseInt(effect.substring(17));
+        }
+        //If user purchased a biome, add it to the game.biomes array
+        let purchasedBiome = "";
+        if (effect.substring(0, 12) === "biome_unlock") {
+          const biome = effect.substring(13);
+
+          //Get biomes from json
+          const fileData = await fs.readFile(directoryPathBiomes, "utf8");
+
+          const biomes = await JSON.parse(fileData).biomes;
+
+          purchasedBiome = biomes.find((obj) => obj.name === biome);
         }
 
         //Purchase the upgrade
+        let updateObject = {
+          $set: {
+            "game.upgrades.$.status": "purchased",
+            "game.score": score - price,
+          },
+        };
+        // If biome2 has a value, add it to the game.biomes array
+        if (purchasedBiome) {
+          updateObject.$addToSet = {
+            "game.biomes": purchasedBiome,
+          };
+        }
+        //If bonk_multiplier has a value, multiply the click multiplier
+        if (bonk_multiplier !== 1) {
+          updateObject.$mul = {
+            "game.click_multiplier": bonk_multiplier,
+          };
+        }
+
+        //Send mongo mutation
         await User.findOneAndUpdate(
           {
             _id: context.user._id,
             "game.upgrades": { $elemMatch: { name: name } },
           },
-          {
-            $set: {
-              "game.upgrades.$.status": "purchased",
-              "game.score": score - price,
-            },
-            $mul: {
-              "game.click_multiplier": bonk_multiplier,
-            },
-          },
-
+          updateObject,
           { new: true }
         );
 
         //Find the purchased upgrade unlocks and set their status to shown
-        const purchasedUpgrade = user.game.upgrades.find(
-          (upgrade) => upgrade.name === name
-        );
-        console.log("PU", purchasedUpgrade);
         const upgradesWithUnlocks = user.game.upgrades.filter((upgrade) =>
-          purchasedUpgrade.unlocks.includes(upgrade.name)
+          unlocks.includes(upgrade.name)
         );
-        console.log("UU", upgradesWithUnlocks);
+
         upgradesWithUnlocks.forEach(async (upgrade) => {
           await User.findOneAndUpdate(
             {

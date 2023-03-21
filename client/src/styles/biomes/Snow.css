@@ -1,0 +1,25 @@
+.snow {
+  background: url("../../assets/frederick_snow_background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  user-select: none;
+  flex-direction: row;
+}
+.snow-biome-upgrade {
+  width: 20%;
+  height: 80%;
+  background-color: #07c8f8;
+  border: #000 2px solid;
+  text-align: center;
+  font-size: 1.5vw;
+}
+.upgrade-header {
+  border-bottom: #000 2px solid;
+  text-align: center;
+  font-size: 1.5vw;
+}

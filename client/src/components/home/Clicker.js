@@ -5,11 +5,15 @@ import boopSfx from "../../assets/boop.wav";
 
 function Clicker(props) {
   const [isActive, setIsActive] = React.useState(false);
+  const [mute, setMute] = React.useState(false);
 
   const [play] = useSound(boopSfx);
   const updateScore = async () => {
     //Sound
-    play();
+    if (!mute) {
+      play();
+    }
+
     console.log(props.clickMultiplier);
     //Score
 
@@ -30,6 +34,9 @@ function Clicker(props) {
         className={`clicker ${isActive ? "clicker-active" : ""}`}
         onClick={updateScore}
       ></div>
+      <button className="mute-btn" onClick={() => setMute(!mute)}>
+        Mute
+      </button>
     </div>
   );
 }

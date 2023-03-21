@@ -1,0 +1,13 @@
+{
+  "biomes": [
+    {
+      "name": "snow",
+      "completion_percentage": 0,
+      "upgrades": {
+        "amount": 0,
+        "name": "snowflakes",
+        "conversion_rate": "2"
+      }
+    }
+  ]
+}
