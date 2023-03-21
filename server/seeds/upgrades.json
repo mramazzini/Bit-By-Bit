@@ -38,6 +38,36 @@
       "effect": "biome_unlock_snow",
       "price": 200,
       "dependencies": ["Another Stick"],
+      "unlocks": ["Peck"]
+    },
+    {
+      "name": "Peck",
+      "status": "hidden",
+      "description": "Gather snowflakes by pecking the ground",
+      "flavor": "peck peck peck peck peck",
+      "effect": "farm_unlock_peck",
+      "price": 300,
+      "dependencies": ["Snowy Trek"],
+      "unlocks": ["Make Snowballs"]
+    },
+    {
+      "name": "Make Snowballs",
+      "status": "hidden",
+      "description": "Gather snowballs to better hold snowflakes",
+      "flavor": "Throw it at a friend!",
+      "effect": "farm_unlock_snowballs",
+      "price": 1000,
+      "dependencies": ["Peck"],
+      "unlocks": ["Purchase Shovel"]
+    },
+    {
+      "name": "Purchase Shovel",
+      "status": "hidden",
+      "description": "Use the shovel to dig snow!",
+      "flavor": "You probably should have started with this",
+      "effect": "farm_unlock_shovel",
+      "price": 5000,
+      "dependencies": ["Purchase Shovel"],
       "unlocks": []
     }
   ]

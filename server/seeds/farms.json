@@ -1,0 +1,28 @@
+{
+  "snow": [
+    {
+      "name": "Peck",
+      "status": "hidden",
+      "description": "Peck at the snow to get some snowflakes",
+      "flavor": "Simple and inneffective",
+      "level": 1,
+      "cost": 10
+    },
+    {
+      "name": "Snowballs",
+      "status": "hidden",
+      "description": "Make some snowballs to hold more snowflakes",
+      "flavor": "Catch!",
+      "level": 1,
+      "cost": 100
+    },
+    {
+      "name": "Shovel Snow",
+      "status": "hidden",
+      "description": "Shovel snow to get more snowflakes",
+      "flavor": "I diggy hole",
+      "level": 1,
+      "cost": 1000
+    }
+  ]
+}

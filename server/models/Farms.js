@@ -22,6 +22,10 @@ const farmSchema = new mongoose.Schema({
     required: true,
     default: 10,
   },
+  level: {
+    type: Number,
+    default: 1,
+  },
 });
 
 module.exports = farmSchema;
