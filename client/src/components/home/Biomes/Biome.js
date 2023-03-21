@@ -1,10 +1,9 @@
 import React from "react";
 
-const Biome = ({ biome, farms }) => {
+const Biome = ({ biome }) => {
+  console.log(biome);
   return (
-    <div className="biome">
-      <div className="biome-name">{biome.name}</div>
-    </div>
+    <div className={biome.name}>{biome.farms.map((farm, index) => farm())}</div>
   );
 };
 
