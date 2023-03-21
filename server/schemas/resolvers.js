@@ -21,6 +21,10 @@ const resolvers = {
 
       return user.game.upgrades;
     },
+    biomes: async (parent, args, context) => {
+      const user = await User.findOne({ _id: context.user._id });
+      return user.game.biomes;
+    },
   },
 
   Mutation: {

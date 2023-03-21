@@ -27,3 +27,11 @@ export const GET_CLICK_MULTIPLIER = gql`
     clickMultiplier
   }
 `;
+export const GET_BIOMES = gql`
+  query biomes {
+    biomes {
+      completion_percentage
+      name
+    }
+  }
+`;

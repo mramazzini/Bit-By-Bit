@@ -49,6 +49,7 @@ const typeDefs = gql`
     user(username: String!): User
     game: Game
     upgrades: [Upgrade]
+    biomes: [Biome]
   }
 
   type Mutation {
