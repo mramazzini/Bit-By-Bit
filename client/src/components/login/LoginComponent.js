@@ -16,7 +16,11 @@ const LoginComponent = () => {
       });
       const token = mutationResponse.data.login.token;
       Auth.login(token);
+
       navigate("/");
+      // IMPORTANT Reload the page to update the state of the user
+      localStorage.clear();
+      window.location.reload();
     } catch (e) {
       Auth.handleError(e);
     }

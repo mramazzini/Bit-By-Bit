@@ -23,7 +23,10 @@ const RegisterComponent = () => {
       });
       const token = mutationResponse.data.addUser.token;
       Auth.login(token);
+
       navigate("/");
+      // IMPORTANT Reload the page to update the state of the user
+      window.location.reload();
     } catch (e) {
       Auth.handleError(e);
     }

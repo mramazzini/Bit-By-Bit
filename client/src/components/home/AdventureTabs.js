@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_BIOMES } from "../utils/queries";
 import Snow from "./Biomes/Snow";
-const AdventureTabs = () => {
-  const { loading, error, data } = useQuery(GET_BIOMES);
-  const [activeTab, setActiveTab] = useState("");
+const AdventureTabs = (refreshBiome) => {
+  const { loading, error, data, refetch } = useQuery(GET_BIOMES);
+  const ACTIVE_TAB_KEY = "activeTab";
+  const [activeTab, setActiveTab] = useState(
+    localStorage.getItem(ACTIVE_TAB_KEY) || ""
+  );
 
   const openBiome = (biomeName) => {
     setActiveTab(biomeName);
+    localStorage.setItem(ACTIVE_TAB_KEY, biomeName);
   };
 
+  refetch();
   if (loading) return <p>Loading...</p>;
   else if (error) return <p>Error</p>;
   else {

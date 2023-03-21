@@ -12,7 +12,7 @@ function Home() {
   const [clickMultiplier, setClickMultiplier] = useState(1);
   const [initialized, setInitialized] = useState(false);
   const [score, setScore] = useState(0);
-  const { loading, error, data: gameData } = useQuery(GET_GAME);
+  const { loading, error, data: gameData, refetch } = useQuery(GET_GAME);
 
   const updateScore = async (score) => {
     setScore(score);
@@ -46,7 +46,6 @@ function Home() {
     return "ERROR!";
   } else {
     if (!initialized) {
-      console.log(loading);
       setScore(gameData.game.score);
       setClickMultiplier(gameData.game.click_multiplier);
       setInitialized(true);

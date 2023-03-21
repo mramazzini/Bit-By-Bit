@@ -162,7 +162,7 @@ const resolvers = {
             "game.score": score - price,
           },
         };
-        // If biome2 has a value, add it to the game.biomes array
+        // If biome has a value, add it to the game.biomes array
         if (purchasedBiome) {
           updateObject.$addToSet = {
             "game.biomes": purchasedBiome,

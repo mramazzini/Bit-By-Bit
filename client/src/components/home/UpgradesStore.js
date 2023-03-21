@@ -3,12 +3,18 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_UPGRADES } from "../utils/queries";
 import { PURCHASE_UPGRADE, UPDATE_GAME } from "../utils/mutations";
 
-const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
+const UpgradesStore = ({
+  score,
+  updateScore,
+  updateClickMultiplier,
+  unlockBiome,
+}) => {
   const { loading, error, data, refetch } = useQuery(GET_UPGRADES);
   const [updateGame] = useMutation(UPDATE_GAME);
   const [purchaseUpgrade] = useMutation(PURCHASE_UPGRADE);
   const [initialized, setInitialized] = useState(false);
   const [upgrades, setUpgrades] = useState();
+  refetch();
   const handlePurchase = async (name, price, index) => {
     const upgradeArray = data.upgrades;
 
@@ -56,6 +62,7 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
         } else if (purchasedUpgrade.effect.includes("biome_unlock")) {
           //Unlock biome
           console.log(purchasedUpgrade.effect.substring(13));
+          unlockBiome(purchasedUpgrade.effect.substring(13));
         }
       } else {
         console.log(
@@ -67,9 +74,6 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
       console.error("Error Purchasing upgrade");
       console.error(e);
     }
-
-    //refetch the updated upgrades data
-    refetch();
   };
 
   if (loading) {
