@@ -27,6 +27,8 @@ const Biome = ({ biomeData }) => {
               name: formattedName,
               description: farm.description,
               cost: farm.cost,
+              level: farm.level,
+              flavor: farm.flavor,
             }}
           />
         );

@@ -35,3 +35,8 @@ export const PURCHASE_UPGRADE = gql`
     purchaseUpgrade(name: $name, score: $score)
   }
 `;
+export const PURCHASE_FARM_UPGRADE = gql`
+  mutation purchaseFarmUpgrade($name: String!, $score: Int!) {
+    purchaseFarmUpgrade(name: $name, score: $score)
+  }
+`;
