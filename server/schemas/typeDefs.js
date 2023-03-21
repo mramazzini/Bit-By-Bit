@@ -15,11 +15,22 @@ const typeDefs = gql`
     token: ID!
     user: User
   }
+  type Currency {
+    amount: Int
+    name: String
+    conversion_rate: Int
+  }
+  type Biome {
+    name: String
+    currency: Currency
+    completion_percentage: Int
+  }
 
   type Game {
     score: Int
     upgrades: [Upgrade]
     click_multiplier: Int
+    biomes: [Biome]
   }
 
   type Upgrade {
@@ -44,14 +55,7 @@ const typeDefs = gql`
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     updateGame(score: Int!): Game
-    purchaseUpgrade(
-      name: String!
-      score: Int!
-      price: Int!
-      effect: String!
-      dependencies: [String]
-      unlocks: [String]
-    ): String
+    purchaseUpgrade(name: String!, score: Int!): String
   }
 `;
 

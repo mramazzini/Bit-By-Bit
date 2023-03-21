@@ -11,11 +11,14 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
   const [upgrades, setUpgrades] = useState();
   const handlePurchase = async (name, price, index) => {
     const upgradeArray = data.upgrades;
+
     //Find index of the purchased upgrade
     const upgradedIndex = upgradeArray.findIndex(
       (upgrade) => upgrade.name === name
     );
+
     const purchasedUpgrade = upgradeArray[upgradedIndex];
+
     //Send api mutation to update database
     try {
       //Update score in database
@@ -28,12 +31,10 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
       const upgradeResponse = await purchaseUpgrade({
         variables: {
           name: purchasedUpgrade.name,
-          price: price,
           score: score,
-          effect: purchasedUpgrade.effect,
-          dependencies: purchasedUpgrade.dependencies,
         },
       });
+
       if (!upgradeResponse) {
         throw new Error("Purchase failed");
       } else if (upgradeResponse.data.purchaseUpgrade === "purchased") {
@@ -47,11 +48,12 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
           return newUpgrades;
         });
         //Update click multiplier in state
+
         if (purchasedUpgrade.effect.includes("click_multiplier")) {
           updateClickMultiplier(
             parseInt(purchasedUpgrade.effect.substring(17))
           );
-        } else if (purchaseUpgrade.effect.includes("biome_unlock")) {
+        } else if (purchasedUpgrade.effect.includes("biome_unlock")) {
           //Unlock biome
           console.log(purchasedUpgrade.effect.substring(13));
         }
