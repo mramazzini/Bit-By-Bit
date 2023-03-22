@@ -19,6 +19,7 @@ const typeDefs = gql`
     amount: Int
     name: String
     conversion_rate: Int
+    amount_per_second: Int
   }
   type Biome {
     name: String
@@ -33,6 +34,7 @@ const typeDefs = gql`
     description: String
     cost: Int
     level: Int
+    amount_per_second: Int
   }
 
   type Game {
@@ -59,15 +61,16 @@ const typeDefs = gql`
     game: Game
     upgrades: [Upgrade]
     biomes: [Biome]
+    amount_per_second(biome_name: String!): Int
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    updateGame(score: Int!, type: String!): Game
+    updateGame(score: Int!): Game
     purchaseUpgrade(name: String!, score: Int!): String
     purchaseFarmUpgrade(name: String!, score: Int!): String
-    convertCurrency(name: String!, amount: Int!): String
+    convertCurrency(name: String!, currency_amount: Int!): String
   }
 `;
 

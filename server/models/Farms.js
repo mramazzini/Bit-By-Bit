@@ -4,7 +4,6 @@ const farmSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-
   description: {
     type: String,
     required: true,
@@ -21,6 +20,10 @@ const farmSchema = new mongoose.Schema({
   level: {
     type: Number,
     default: 1,
+  },
+  amount_per_second: {
+    type: Number,
+    default: 0,
   },
 });
 

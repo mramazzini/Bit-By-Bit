@@ -97,6 +97,7 @@
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
+  text-transform: capitalize;
 }
 .biome-side-menu-conversion-rate {
   width: 80%;
@@ -112,6 +113,18 @@
   width: 80%;
   height: 50%;
   border: #000 2px solid;
+  text-align: center;
+  font-size: 1.5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center; /* Align vertical */
+}
+.biome-side-menu-body-title {
+  width: 80%;
+  height: 10%;
+  border-bottom: #000 2px solid;
+  padding: 3px;
   text-align: center;
   font-size: 1.5vw;
   display: flex;

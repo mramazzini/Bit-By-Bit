@@ -3,9 +3,8 @@ import "../../../styles/Biome.css";
 import Farm from "./Farm";
 import CurrencyConverter from "./CurrencyConverter";
 const Biome = ({ biomeData, score, updateScore }) => {
-  console.log(biomeData);
   const { farms, name, currency } = biomeData;
-
+  const [currencyAmount, setCurrencyAmount] = React.useState(currency.amount);
   const formatFarmName = (name) => {
     const words = name.split("_");
     // Remove the first word from the array
@@ -16,6 +15,10 @@ const Biome = ({ biomeData, score, updateScore }) => {
     return capitalizedWords.join(" ");
   };
 
+  const updateCurrencyAmount = () => {
+    setCurrencyAmount(currencyAmount - 1);
+    updateScore(score + currency.conversion_rate);
+  };
   return (
     <div className={name}>
       {farms.map((farm, index) => {
@@ -42,12 +45,22 @@ const Biome = ({ biomeData, score, updateScore }) => {
         <div className={`upgrade-image ${name}-upgrade-image`}></div>
         <div className="biome-side-menu-body">
           <div className="biome-side-menu-amount">
-            {currency.amount} {currency.name}
+            <span className="biome-side-menu-body-title">{currency.name}s</span>
+            <span className="biome-side-menu-amountPerSecond">
+              per second: <br />
+              {currency.amount_per_second}
+            </span>
+            Amount: <br />
+            {currencyAmount}
           </div>
           <div className="biome-side-menu-conversion-rate">
-            {currency.conversion_rate} {currency.name} : 1 point
+            1 {currency.name} : {currency.conversion_rate} points
           </div>
-          <CurrencyConverter />
+          <CurrencyConverter
+            updateCurrencyAmount={updateCurrencyAmount}
+            biome_currency={currency.name}
+            currency_amount={currencyAmount}
+          />
         </div>
       </div>
     </div>

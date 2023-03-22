@@ -25,6 +25,35 @@ const resolvers = {
       const user = await User.findOne({ _id: context.user._id });
       return user.game.biomes;
     },
+    amount_per_second: async (parent, { biome_name }, context) => {
+      try {
+        const user = await User.findOne({ _id: context.user._id });
+        const biome = await user.game.biomes.find(
+          (biome) => biome.name === biome_name
+        );
+        const farms = await biome.farms;
+        let amount_per_second = 0;
+        farms.forEach((farm) => {
+          amount_per_second += farm.amount_per_second;
+        });
+        await User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $set: {
+              "game.biomes.$[biome].currency.amount_per_second":
+                amount_per_second,
+            },
+          },
+          {
+            arrayFilters: [{ "biome.name": biome_name }],
+          }
+        );
+        return amount_per_second;
+      } catch (err) {
+        console.log(err);
+        return err;
+      }
+    },
   },
 
   Mutation: {
@@ -86,19 +115,48 @@ const resolvers = {
       return { token, user };
     },
 
-    updateGame: async (parent, { score, type }, context) => {
-      if (type === "score") {
-        const user = await User.findOneAndUpdate(
+    updateGame: async (parent, { score }, context) => {
+      const user = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        {
+          $set: {
+            "game.score": score,
+          },
+        },
+        { new: true }
+      );
+
+      return user.game;
+    },
+
+    convertCurrency: async (parent, { name, currency_amount }, context) => {
+      try {
+        if (currency_amount < 1) {
+          return "not enough currency";
+        }
+        const user = await User.findOne({ _id: context.user._id });
+        //Get currency conversion rate from biome
+        const biome = await user.game.biomes.find(
+          (biome) => biome.currency.name === name
+        );
+        const conversion_rate = biome.currency.conversion_rate;
+        const response = await User.findOneAndUpdate(
           { _id: context.user._id },
           {
-            $set: {
-              "game.score": score,
+            $inc: {
+              "game.score": conversion_rate,
+              "game.biomes.$[biome].currency.amount": -1,
             },
           },
-          { new: true }
+          {
+            arrayFilters: [{ "biome.currency.name": name }],
+          }
         );
-
-        return user;
+        if (response) {
+          return "success";
+        }
+      } catch (err) {
+        return err.message;
       }
     },
 

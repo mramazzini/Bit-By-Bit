@@ -31,6 +31,7 @@ const UpgradesStore = ({
       await updateGame({
         variables: {
           score: score,
+          type: "score",
         },
       });
 

@@ -18,6 +18,10 @@ const biomeSchema = new mongoose.Schema({
       type: Number,
       default: 1,
     },
+    amount_per_second: {
+      type: Number,
+      default: 0,
+    },
   },
 
   completion_percentage: {

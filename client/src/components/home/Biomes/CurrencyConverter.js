@@ -1,27 +1,43 @@
 import { useMutation } from "@apollo/client";
 import React from "react";
-import { UPDATE_GAME } from "../../utils/mutations";
+import { CONVERT_CURRENCY } from "../../utils/mutations";
 
-const CurrencyConverter = () => {
-  const [updateGame] = useMutation(UPDATE_GAME);
-  const updateScore = async (score) => {
+const CurrencyConverter = ({
+  biome_currency,
+  currency_amount,
+  updateCurrencyAmount,
+}) => {
+  const [convertCurrency] = useMutation(CONVERT_CURRENCY);
+
+  const updateScore = async () => {
     try {
-      const response = await updateGame({
+      console.log(biome_currency, currency_amount);
+      const response = await convertCurrency({
         variables: {
-          score: score,
-          type: "score",
+          name: biome_currency,
+          currency_amount: currency_amount,
         },
       });
+      const res = response.data.convertCurrency;
       if (!response) {
         throw new Error("Conversion Failed");
-      } else if (response.data.updateGame === "updated") {
+      } else if (res === "success") {
         console.log("Currency Converted");
+        updateCurrencyAmount();
+      } else if (res === "not enough currency") {
+        console.log("Need more currency");
+      } else {
+        console.log("Something went wrong");
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  return <button className="currency-converter-button">Convert</button>;
+  return (
+    <button className="currency-converter-button" onClick={() => updateScore()}>
+      Convert
+    </button>
+  );
 };
 export default CurrencyConverter;

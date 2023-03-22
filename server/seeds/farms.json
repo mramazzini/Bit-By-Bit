@@ -6,7 +6,8 @@
       "description": "Peck at the snow to get some snowflakes",
       "flavor": "Simple and inneffective",
       "level": 1,
-      "cost": 10
+      "cost": 10,
+      "amount_per_second": 1
     },
     {
       "name": "snow_snowballs",
@@ -14,7 +15,8 @@
       "description": "Make some snowballs to hold more snowflakes",
       "flavor": "Catch!",
       "level": 1,
-      "cost": 100
+      "cost": 100,
+      "amount_per_second": 3
     },
     {
       "name": "snow_shovel",
@@ -22,7 +24,8 @@
       "description": "Shovel snow to get more snowflakes",
       "flavor": "I diggy hole",
       "level": 1,
-      "cost": 1000
+      "cost": 1000,
+      "amount_per_second": 10
     }
   ]
 }
