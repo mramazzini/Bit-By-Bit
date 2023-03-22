@@ -86,18 +86,20 @@ const resolvers = {
       return { token, user };
     },
 
-    updateGame: async (parent, { score }, context) => {
-      const user = await User.findOneAndUpdate(
-        { _id: context.user._id },
-        {
-          $set: {
-            "game.score": score,
+    updateGame: async (parent, { score, type }, context) => {
+      if (type === "score") {
+        const user = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $set: {
+              "game.score": score,
+            },
           },
-        },
-        { new: true }
-      );
+          { new: true }
+        );
 
-      return user;
+        return user;
+      }
     },
 
     purchaseUpgrade: async (parent, { name, score }, context) => {
@@ -107,12 +109,15 @@ const resolvers = {
       //Get directories for JSON seed files depending on environment
       let directoryPathUpgrades;
       let directoryPathBiomes;
+      let directoryPathFarms;
       if (process.env.NODE_ENV === "production") {
         directoryPathUpgrades = "server/seeds/upgrades.json";
         directoryPathBiomes = "server/seeds/biomes.json";
+        directoryPathFarms = "server/seeds/farms.json";
       } else {
         directoryPathUpgrades = "./seeds/upgrades.json";
         directoryPathBiomes = "./seeds/biomes.json";
+        directoryPathFarms = "./seeds/farms.json";
       }
 
       //Get upgrades from json
@@ -154,6 +159,16 @@ const resolvers = {
 
           purchasedBiome = biomes.find((obj) => obj.name === biome);
         }
+        //If user purchased a biome farm, add it to the game.biomes.farm array
+        let purchasedFarm = "";
+        let biomeName = "";
+        if (effect.substring(0, 11) === "farm_unlock") {
+          const farm = effect.substring(12);
+          const fileData = await fs.readFile(directoryPathFarms, "utf8");
+          biomeName = effect.substring(12, 16);
+          const farms = await JSON.parse(fileData);
+          purchasedFarm = farms[biomeName].find((obj) => obj.name === farm);
+        }
 
         //Purchase the upgrade
         let updateObject = {
@@ -172,6 +187,17 @@ const resolvers = {
         if (bonk_multiplier !== 1) {
           updateObject.$mul = {
             "game.click_multiplier": bonk_multiplier,
+          };
+        }
+        //If farm has a value, add it to the game.biomes.farm array
+        if (purchasedFarm) {
+          const biomeIndex = user.game.biomes.findIndex(
+            (biome) => biome.name === biomeName
+          );
+          const key = "game.biomes." + biomeIndex + ".farms";
+
+          updateObject.$addToSet = {
+            [key]: purchasedFarm,
           };
         }
 
@@ -203,6 +229,51 @@ const resolvers = {
         return "purchased";
       } else {
         return "not enough score";
+      }
+    },
+    purchaseFarmUpgrade: async (parent, { name, score }, context) => {
+      // check if use can afford upgrade
+      const user = await User.findOne({ _id: context.user._id });
+
+      const biome = user.game.biomes.find(
+        (biome) => biome.name === name.substring(0, 4)
+      );
+
+      const biomeIndex = {
+        snow: 0,
+      };
+
+      const price = biome.farms.find((farm) => farm.name === name).cost;
+
+      if (score >= price) {
+        //Purchase the upgrade
+        try {
+          const key =
+            "game.biomes." + biomeIndex[biome.name.substring(0, 4)] + ".farms";
+
+          const costKey = key + ".$.cost";
+          const levelKey = key + ".$.level";
+
+          await User.findOneAndUpdate(
+            {
+              _id: context.user._id,
+              [key]: { $elemMatch: { name: name } },
+            },
+            {
+              $set: {
+                "game.score": score - price,
+                [costKey]: Math.floor(price + price * 0.15),
+              },
+              $inc: {
+                [levelKey]: 1,
+              },
+            },
+            { new: true }
+          );
+        } catch (err) {
+          console.log(err);
+        }
+        return "purchased";
       }
     },
   },

@@ -28,10 +28,13 @@
 .upgrade-description {
   width: 80%;
   height: 50%;
-  margin-top: 5px;
+
   border: #000 2px solid;
   text-align: center;
   font-size: 1.5vw;
+  display: flex;
+  justify-content: center; /* Align horizontal */
+  align-items: center; /* Align vertical */
 }
 .upgrade-cost {
   width: 80%;
@@ -40,24 +43,83 @@
   border: #000 2px solid;
   text-align: center;
   font-size: 1.5vw;
+  display: flex;
+  justify-content: center; /* Align horizontal */
+  align-items: center; /* Align vertical */
 }
 
 .upgrade-button {
   width: 80%;
   height: 10%;
-
+  display: flex;
+  justify-content: center; /* Align horizontal */
+  align-items: center; /* Align vertical */
   border: #000 2px solid;
   text-align: center;
   font-size: 1.5vw;
 }
 .upgrade-image {
-  margin-top: 3px;
   display: inline-block;
   width: 5vw;
   height: 5vw;
 }
 
-/*Snow*/
+/*Biome Side menu*/
+.biome-side-menu {
+  width: 20%;
+  font-size: 1rem;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  user-select: none;
+  border: #000 3px solid;
+  background-color: #fff;
+}
+.currency-converter-button {
+  width: 80%;
+  height: 10%;
+  border: #000 2px solid;
+  text-align: center;
+  font-size: 1.5vw;
+}
+.biome-side-menu-header {
+  border-bottom: #000 2px solid;
+  text-align: center;
+  font-size: 1.5vw;
+  height: 6%;
+}
+.biome-side-menu-body {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+}
+.biome-side-menu-conversion-rate {
+  width: 80%;
+  height: 25%;
+  display: flex;
+  justify-content: center; /* Align horizontal */
+  align-items: center; /* Align vertical */
+  border: #000 2px solid;
+  text-align: center;
+  font-size: 1.5vw;
+}
+.biome-side-menu-amount {
+  width: 80%;
+  height: 50%;
+  border: #000 2px solid;
+  text-align: center;
+  font-size: 1.5vw;
+  display: flex;
+  justify-content: center; /* Align horizontal */
+  align-items: center; /* Align vertical */
+}
+
+/*Snow Biome*/
 .snow {
   background: url("../assets/frederick_snow_background.jpg");
   background-repeat: no-repeat;
@@ -70,7 +132,7 @@
   user-select: none;
   flex-direction: row;
 }
-.snow-biome-upgrade {
+.theme-snow {
   background-color: #07c8f8;
 }
 

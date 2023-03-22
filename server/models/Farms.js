@@ -4,11 +4,7 @@ const farmSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-  status: {
-    type: String,
-    enum: ["purchased", "hidden"],
-    default: "hidden",
-  },
+
   description: {
     type: String,
     required: true,

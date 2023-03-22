@@ -44,7 +44,9 @@ const Dashboard = ({
       </ul>
       <div className="top-divider"></div>
       <div className="dashboard-body">
-        {activeTab === "adventure" && <AdventureTabs />}
+        {activeTab === "adventure" && (
+          <AdventureTabs score={score} updateScore={updateScore} />
+        )}
         {activeTab === "upgrades" && (
           <UpgradesStore
             score={score}

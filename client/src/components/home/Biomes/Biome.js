@@ -1,9 +1,10 @@
 import React from "react";
 import "../../../styles/Biome.css";
 import Farm from "./Farm";
-
-const Biome = ({ biomeData }) => {
-  const { farms, name } = biomeData;
+import CurrencyConverter from "./CurrencyConverter";
+const Biome = ({ biomeData, score, updateScore }) => {
+  console.log(biomeData);
+  const { farms, name, currency } = biomeData;
 
   const formatFarmName = (name) => {
     const words = name.split("_");
@@ -24,15 +25,31 @@ const Biome = ({ biomeData }) => {
             key={index}
             biome={name}
             upgrade={{
-              name: formattedName,
+              formattedName: formattedName,
+              name: farm.name,
               description: farm.description,
               cost: farm.cost,
               level: farm.level,
               flavor: farm.flavor,
             }}
+            score={score}
+            updateScore={updateScore}
           />
         );
       })}
+      <div className={`biome-side-menu theme-${name}`}>
+        <div className="biome-side-menu-header">Converter</div>
+        <div className={`upgrade-image ${name}-upgrade-image`}></div>
+        <div className="biome-side-menu-body">
+          <div className="biome-side-menu-amount">
+            {currency.amount} {currency.name}
+          </div>
+          <div className="biome-side-menu-conversion-rate">
+            {currency.conversion_rate} {currency.name} : 1 point
+          </div>
+          <CurrencyConverter />
+        </div>
+      </div>
     </div>
   );
 };

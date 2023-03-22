@@ -24,6 +24,15 @@ const typeDefs = gql`
     name: String
     currency: Currency
     completion_percentage: Int
+    farms: [Farm]
+  }
+  type Farm {
+    name: String
+    flavor: String
+    status: String
+    description: String
+    cost: Int
+    level: Int
   }
 
   type Game {
@@ -55,8 +64,10 @@ const typeDefs = gql`
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    updateGame(score: Int!): Game
+    updateGame(score: Int!, type: String!): Game
     purchaseUpgrade(name: String!, score: Int!): String
+    purchaseFarmUpgrade(name: String!, score: Int!): String
+    convertCurrency(name: String!, amount: Int!): String
   }
 `;
 

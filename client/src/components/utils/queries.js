@@ -40,6 +40,11 @@ export const GET_BIOMES = gql`
         cost
         level
       }
+      currency {
+        name
+        amount
+        conversion_rate
+      }
     }
   }
 `;

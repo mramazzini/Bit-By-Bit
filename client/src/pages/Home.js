@@ -29,6 +29,7 @@ function Home() {
         await updateGame({
           variables: {
             score: score,
+            type: "score",
           },
         });
         console.log("Game Autosaved!");

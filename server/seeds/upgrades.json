@@ -45,7 +45,7 @@
       "status": "hidden",
       "description": "Gather snowflakes by pecking the ground",
       "flavor": "peck peck peck peck peck",
-      "effect": "farm_unlock_peck",
+      "effect": "farm_unlock_snow_peck",
       "price": 300,
       "dependencies": ["Snowy Trek"],
       "unlocks": ["Make Snowballs"]
@@ -55,7 +55,7 @@
       "status": "hidden",
       "description": "Gather snowballs to better hold snowflakes",
       "flavor": "Throw it at a friend!",
-      "effect": "farm_unlock_snowballs",
+      "effect": "farm_unlock_snow_snowballs",
       "price": 1000,
       "dependencies": ["Peck"],
       "unlocks": ["Purchase Shovel"]
@@ -65,9 +65,9 @@
       "status": "hidden",
       "description": "Use the shovel to dig snow!",
       "flavor": "You probably should have started with this",
-      "effect": "farm_unlock_shovel",
+      "effect": "farm_unlock_snow_shovel",
       "price": 5000,
-      "dependencies": ["Purchase Shovel"],
+      "dependencies": ["Make Snowballs"],
       "unlocks": []
     }
   ]
