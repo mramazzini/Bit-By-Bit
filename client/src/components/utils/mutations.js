@@ -23,8 +23,8 @@ export const ADD_USER = gql`
 `;
 
 export const UPDATE_GAME = gql`
-  mutation updateGame($score: Int!) {
-    updateGame(score: $score) {
+  mutation updateGame($score: Int!, $snowflakes: Int) {
+    updateGame(score: $score, snowflakes: $snowflakes) {
       score
     }
   }

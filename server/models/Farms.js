@@ -19,9 +19,13 @@ const farmSchema = new mongoose.Schema({
   },
   level: {
     type: Number,
-    default: 1,
+    default: 0,
   },
   amount_per_second: {
+    type: Number,
+    default: 0,
+  },
+  base_amount_per_second: {
     type: Number,
     default: 0,
   },

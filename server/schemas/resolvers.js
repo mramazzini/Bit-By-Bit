@@ -115,13 +115,15 @@ const resolvers = {
       return { token, user };
     },
 
-    updateGame: async (parent, { score }, context) => {
+    updateGame: async (parent, { score, snowflakes }, context) => {
+      const updateFields = { "game.score": score };
+      if (snowflakes) {
+        updateFields["game.biomes.0.currency.amount"] = snowflakes;
+      }
       const user = await User.findOneAndUpdate(
         { _id: context.user._id },
         {
-          $set: {
-            "game.score": score,
-          },
+          $set: updateFields,
         },
         { new: true }
       );
@@ -297,30 +299,40 @@ const resolvers = {
         (biome) => biome.name === name.substring(0, 4)
       );
 
-      const biomeIndex = {
-        snow: 0,
-      };
+      const farm = biome.farms.find((farm) => farm.name === name);
+      const { cost, level, base_amount_per_second } = farm;
+      //recalculate the amount per second
 
-      const price = biome.farms.find((farm) => farm.name === name).cost;
-
-      if (score >= price) {
+      if (score >= cost) {
         //Purchase the upgrade
         try {
-          const key =
-            "game.biomes." + biomeIndex[biome.name.substring(0, 4)] + ".farms";
-
-          const costKey = key + ".$.cost";
-          const levelKey = key + ".$.level";
+          let biomeAmountPerSecond = 0;
+          biome.farms.forEach((farm) => {
+            biomeAmountPerSecond += farm.base_amount_per_second * farm.level;
+          });
+          const biomeIndex = {
+            snow: 0,
+          };
+          const key = "game.biomes." + biomeIndex[biome.name.substring(0, 4)];
+          const farmKey = key + ".farms";
+          const costKey = key + ".farms.$.cost";
+          const levelKey = key + ".farms.$.level";
+          const farmAmountPerSecondKey = key + ".farms.$.amount_per_second";
+          const biomeAmountPerSecondKey = key + ".currency.amount_per_second";
 
           await User.findOneAndUpdate(
             {
               _id: context.user._id,
-              [key]: { $elemMatch: { name: name } },
+              [farmKey]: { $elemMatch: { name: name } },
             },
             {
               $set: {
-                "game.score": score - price,
-                [costKey]: Math.floor(price + price * 0.15),
+                "game.score": score - cost,
+                [costKey]: Math.floor(cost + cost * 0.15),
+                [farmAmountPerSecondKey]: Math.floor(
+                  level * base_amount_per_second
+                ),
+                [biomeAmountPerSecondKey]: Math.floor(biomeAmountPerSecond),
               },
               $inc: {
                 [levelKey]: 1,

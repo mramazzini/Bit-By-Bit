@@ -11,7 +11,6 @@ const CurrencyConverter = ({
 
   const updateScore = async () => {
     try {
-      console.log(biome_currency, currency_amount);
       const response = await convertCurrency({
         variables: {
           name: biome_currency,

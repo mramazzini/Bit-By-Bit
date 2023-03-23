@@ -67,7 +67,7 @@ const typeDefs = gql`
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    updateGame(score: Int!): Game
+    updateGame(score: Int!, snowflakes: Int): Game
     purchaseUpgrade(name: String!, score: Int!): String
     purchaseFarmUpgrade(name: String!, score: Int!): String
     convertCurrency(name: String!, currency_amount: Int!): String

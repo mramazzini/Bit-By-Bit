@@ -29,6 +29,9 @@ function Home() {
         await updateGame({
           variables: {
             score: score,
+            snowflakes: parseInt(
+              window.localStorage.getItem("snow-currencyAmount")
+            ),
           },
         });
         console.log("Game Autosaved!");

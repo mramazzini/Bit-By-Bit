@@ -24,14 +24,13 @@ const UpgradesStore = ({
     );
 
     const purchasedUpgrade = upgradeArray[upgradedIndex];
-
+    console.log(purchasedUpgrade.name);
     //Send api mutation to update database
     try {
       //Update score in database
       await updateGame({
         variables: {
           score: score,
-          type: "score",
         },
       });
 
