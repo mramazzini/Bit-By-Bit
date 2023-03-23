@@ -14,7 +14,6 @@ function Clicker(props) {
       play();
     }
 
-    console.log(props.clickMultiplier);
     //Score
 
     //update score in parent component

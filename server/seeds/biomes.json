@@ -3,9 +3,9 @@
     {
       "name": "snow",
       "completion_percentage": 0,
-      "upgrades": {
+      "currency": {
         "amount": 0,
-        "name": "snowflakes",
+        "name": "snowflake",
         "conversion_rate": "2"
       }
     }

@@ -23,8 +23,8 @@ export const ADD_USER = gql`
 `;
 
 export const UPDATE_GAME = gql`
-  mutation updateGame($score: Int!) {
-    updateGame(score: $score) {
+  mutation updateGame($score: Int!, $snowflakes: Int) {
+    updateGame(score: $score, snowflakes: $snowflakes) {
       score
     }
   }
@@ -33,5 +33,16 @@ export const UPDATE_GAME = gql`
 export const PURCHASE_UPGRADE = gql`
   mutation purchaseUpgrade($name: String!, $score: Int!) {
     purchaseUpgrade(name: $name, score: $score)
+  }
+`;
+export const PURCHASE_FARM_UPGRADE = gql`
+  mutation purchaseFarmUpgrade($name: String!, $score: Int!) {
+    purchaseFarmUpgrade(name: $name, score: $score)
+  }
+`;
+
+export const CONVERT_CURRENCY = gql`
+  mutation convertCurrency($name: String!, $currency_amount: Int!) {
+    convertCurrency(name: $name, currency_amount: $currency_amount)
   }
 `;

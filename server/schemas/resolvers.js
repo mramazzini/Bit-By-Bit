@@ -25,6 +25,35 @@ const resolvers = {
       const user = await User.findOne({ _id: context.user._id });
       return user.game.biomes;
     },
+    amount_per_second: async (parent, { biome_name }, context) => {
+      try {
+        const user = await User.findOne({ _id: context.user._id });
+        const biome = await user.game.biomes.find(
+          (biome) => biome.name === biome_name
+        );
+        const farms = await biome.farms;
+        let amount_per_second = 0;
+        farms.forEach((farm) => {
+          amount_per_second += farm.amount_per_second;
+        });
+        await User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $set: {
+              "game.biomes.$[biome].currency.amount_per_second":
+                amount_per_second,
+            },
+          },
+          {
+            arrayFilters: [{ "biome.name": biome_name }],
+          }
+        );
+        return amount_per_second;
+      } catch (err) {
+        console.log(err);
+        return err;
+      }
+    },
   },
 
   Mutation: {
@@ -86,18 +115,51 @@ const resolvers = {
       return { token, user };
     },
 
-    updateGame: async (parent, { score }, context) => {
+    updateGame: async (parent, { score, snowflakes }, context) => {
+      const updateFields = { "game.score": score };
+      if (snowflakes) {
+        updateFields["game.biomes.0.currency.amount"] = snowflakes;
+      }
       const user = await User.findOneAndUpdate(
         { _id: context.user._id },
         {
-          $set: {
-            "game.score": score,
-          },
+          $set: updateFields,
         },
         { new: true }
       );
 
-      return user;
+      return user.game;
+    },
+
+    convertCurrency: async (parent, { name, currency_amount }, context) => {
+      try {
+        if (currency_amount < 1) {
+          return "not enough currency";
+        }
+        const user = await User.findOne({ _id: context.user._id });
+        //Get currency conversion rate from biome
+        const biome = await user.game.biomes.find(
+          (biome) => biome.currency.name === name
+        );
+        const conversion_rate = biome.currency.conversion_rate;
+        const response = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $inc: {
+              "game.score": conversion_rate,
+              "game.biomes.$[biome].currency.amount": -1,
+            },
+          },
+          {
+            arrayFilters: [{ "biome.currency.name": name }],
+          }
+        );
+        if (response) {
+          return "success";
+        }
+      } catch (err) {
+        return err.message;
+      }
     },
 
     purchaseUpgrade: async (parent, { name, score }, context) => {
@@ -107,12 +169,15 @@ const resolvers = {
       //Get directories for JSON seed files depending on environment
       let directoryPathUpgrades;
       let directoryPathBiomes;
+      let directoryPathFarms;
       if (process.env.NODE_ENV === "production") {
         directoryPathUpgrades = "server/seeds/upgrades.json";
         directoryPathBiomes = "server/seeds/biomes.json";
+        directoryPathFarms = "server/seeds/farms.json";
       } else {
         directoryPathUpgrades = "./seeds/upgrades.json";
         directoryPathBiomes = "./seeds/biomes.json";
+        directoryPathFarms = "./seeds/farms.json";
       }
 
       //Get upgrades from json
@@ -154,6 +219,16 @@ const resolvers = {
 
           purchasedBiome = biomes.find((obj) => obj.name === biome);
         }
+        //If user purchased a biome farm, add it to the game.biomes.farm array
+        let purchasedFarm = "";
+        let biomeName = "";
+        if (effect.substring(0, 11) === "farm_unlock") {
+          const farm = effect.substring(12);
+          const fileData = await fs.readFile(directoryPathFarms, "utf8");
+          biomeName = effect.substring(12, 16);
+          const farms = await JSON.parse(fileData);
+          purchasedFarm = farms[biomeName].find((obj) => obj.name === farm);
+        }
 
         //Purchase the upgrade
         let updateObject = {
@@ -162,7 +237,7 @@ const resolvers = {
             "game.score": score - price,
           },
         };
-        // If biome2 has a value, add it to the game.biomes array
+        // If biome has a value, add it to the game.biomes array
         if (purchasedBiome) {
           updateObject.$addToSet = {
             "game.biomes": purchasedBiome,
@@ -172,6 +247,17 @@ const resolvers = {
         if (bonk_multiplier !== 1) {
           updateObject.$mul = {
             "game.click_multiplier": bonk_multiplier,
+          };
+        }
+        //If farm has a value, add it to the game.biomes.farm array
+        if (purchasedFarm) {
+          const biomeIndex = user.game.biomes.findIndex(
+            (biome) => biome.name === biomeName
+          );
+          const key = "game.biomes." + biomeIndex + ".farms";
+
+          updateObject.$addToSet = {
+            [key]: purchasedFarm,
           };
         }
 
@@ -203,6 +289,61 @@ const resolvers = {
         return "purchased";
       } else {
         return "not enough score";
+      }
+    },
+    purchaseFarmUpgrade: async (parent, { name, score }, context) => {
+      // check if use can afford upgrade
+      const user = await User.findOne({ _id: context.user._id });
+
+      const biome = user.game.biomes.find(
+        (biome) => biome.name === name.substring(0, 4)
+      );
+
+      const farm = biome.farms.find((farm) => farm.name === name);
+      const { cost, level, base_amount_per_second } = farm;
+      //recalculate the amount per second
+
+      if (score >= cost) {
+        //Purchase the upgrade
+        try {
+          let biomeAmountPerSecond = 0;
+          biome.farms.forEach((farm) => {
+            biomeAmountPerSecond += farm.base_amount_per_second * farm.level;
+          });
+          const biomeIndex = {
+            snow: 0,
+          };
+          const key = "game.biomes." + biomeIndex[biome.name.substring(0, 4)];
+          const farmKey = key + ".farms";
+          const costKey = key + ".farms.$.cost";
+          const levelKey = key + ".farms.$.level";
+          const farmAmountPerSecondKey = key + ".farms.$.amount_per_second";
+          const biomeAmountPerSecondKey = key + ".currency.amount_per_second";
+
+          await User.findOneAndUpdate(
+            {
+              _id: context.user._id,
+              [farmKey]: { $elemMatch: { name: name } },
+            },
+            {
+              $set: {
+                "game.score": score - cost,
+                [costKey]: Math.floor(cost + cost * 0.15),
+                [farmAmountPerSecondKey]: Math.floor(
+                  level * base_amount_per_second
+                ),
+                [biomeAmountPerSecondKey]: Math.floor(biomeAmountPerSecond),
+              },
+              $inc: {
+                [levelKey]: 1,
+              },
+            },
+            { new: true }
+          );
+        } catch (err) {
+          console.log(err);
+        }
+        return "purchased";
       }
     },
   },

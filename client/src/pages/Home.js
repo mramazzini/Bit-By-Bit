@@ -12,7 +12,7 @@ function Home() {
   const [clickMultiplier, setClickMultiplier] = useState(1);
   const [initialized, setInitialized] = useState(false);
   const [score, setScore] = useState(0);
-  const { loading, error, data: gameData } = useQuery(GET_GAME);
+  const { loading, error, data: gameData, refetch } = useQuery(GET_GAME);
 
   const updateScore = async (score) => {
     setScore(score);
@@ -29,6 +29,9 @@ function Home() {
         await updateGame({
           variables: {
             score: score,
+            snowflakes: parseInt(
+              window.localStorage.getItem("snow-currencyAmount")
+            ),
           },
         });
         console.log("Game Autosaved!");
@@ -36,17 +39,16 @@ function Home() {
         console.error("Error Autosaving");
         console.error(e);
       }
-    }, 10000);
+    }, 30000);
     return () => clearInterval(intervalId);
   }, [score]);
 
   if (loading) {
     return "Loading...";
   } else if (error) {
-    return "ERROR!";
+    return "Error, try refreshing the page";
   } else {
     if (!initialized) {
-      console.log(loading);
       setScore(gameData.game.score);
       setClickMultiplier(gameData.game.click_multiplier);
       setInitialized(true);

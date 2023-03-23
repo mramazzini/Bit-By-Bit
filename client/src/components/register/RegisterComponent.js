@@ -22,8 +22,13 @@ const RegisterComponent = () => {
         },
       });
       const token = mutationResponse.data.addUser.token;
+      //Clear the local storage before setting the new token (needed to prevent a bug)
+      await localStorage.clear();
       Auth.login(token);
+
+      // Reload the page to update the state of the user
       navigate("/");
+      await window.location.reload();
     } catch (e) {
       Auth.handleError(e);
     }

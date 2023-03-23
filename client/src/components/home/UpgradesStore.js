@@ -3,12 +3,18 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_UPGRADES } from "../utils/queries";
 import { PURCHASE_UPGRADE, UPDATE_GAME } from "../utils/mutations";
 
-const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
+const UpgradesStore = ({
+  score,
+  updateScore,
+  updateClickMultiplier,
+  unlockBiome,
+}) => {
   const { loading, error, data, refetch } = useQuery(GET_UPGRADES);
   const [updateGame] = useMutation(UPDATE_GAME);
   const [purchaseUpgrade] = useMutation(PURCHASE_UPGRADE);
   const [initialized, setInitialized] = useState(false);
   const [upgrades, setUpgrades] = useState();
+  refetch();
   const handlePurchase = async (name, price, index) => {
     const upgradeArray = data.upgrades;
 
@@ -18,7 +24,7 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
     );
 
     const purchasedUpgrade = upgradeArray[upgradedIndex];
-
+    console.log(purchasedUpgrade.name);
     //Send api mutation to update database
     try {
       //Update score in database
@@ -67,15 +73,12 @@ const UpgradesStore = ({ score, updateScore, updateClickMultiplier }) => {
       console.error("Error Purchasing upgrade");
       console.error(e);
     }
-
-    //refetch the updated upgrades data
-    refetch();
   };
 
   if (loading) {
     return "Loading...";
   } else if (error) {
-    return "ERROR!";
+    return "Error, try refreshing the page";
   } else if (!initialized) {
     setInitialized(true);
     setUpgrades(data.upgrades);
