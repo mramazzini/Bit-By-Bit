@@ -5,6 +5,33 @@ export const GET_GAME = gql`
     game {
       score
       click_multiplier
+      upgrades {
+        name
+        status
+        flavor
+        effect
+        description
+        price
+        dependencies
+      }
+      biomes {
+        name
+        completion_percentage
+        currency {
+          name
+          amount
+          conversion_rate
+          amount_per_second
+        }
+        farms {
+          name
+          flavor
+
+          description
+          cost
+          level
+        }
+      }
     }
   }
 `;

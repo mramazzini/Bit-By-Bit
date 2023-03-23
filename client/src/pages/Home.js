@@ -21,17 +21,14 @@ function Home() {
   const updateClickMultiplier = async (multiplier) => {
     setClickMultiplier(clickMultiplier * multiplier);
   };
-
+  console.log(JSON.parse(localStorage.getItem("gameData")).game);
   //AutoSave game every 30 seconds into database
   useEffect(() => {
     const intervalId = setInterval(async () => {
       try {
         await updateGame({
           variables: {
-            score: score,
-            snowflakes: parseInt(
-              window.localStorage.getItem("snow-currencyAmount")
-            ),
+            GameInput: JSON.parse(localStorage.getItem("gameData")).game,
           },
         });
         console.log("Game Autosaved!");
@@ -52,6 +49,10 @@ function Home() {
       setScore(gameData.game.score);
       setClickMultiplier(gameData.game.click_multiplier);
       setInitialized(true);
+      const jsonString = JSON.stringify(gameData);
+
+      // Store the object in local storage under the key "gameData"
+      localStorage.setItem("gameData", jsonString);
     }
     return (
       <div className="home-page">

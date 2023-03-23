@@ -115,15 +115,12 @@ const resolvers = {
       return { token, user };
     },
 
-    updateGame: async (parent, { score, snowflakes }, context) => {
-      const updateFields = { "game.score": score };
-      if (snowflakes) {
-        updateFields["game.biomes.0.currency.amount"] = snowflakes;
-      }
+    updateGame: async (parent, { GameInput }, context) => {
+      console.log(GameInput);
       const user = await User.findOneAndUpdate(
         { _id: context.user._id },
         {
-          $set: updateFields,
+          $set: { game: GameInput },
         },
         { new: true }
       );
