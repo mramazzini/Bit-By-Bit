@@ -1,23 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../../styles/Home.css";
 import useSound from "use-sound";
 import boopSfx from "../../assets/boop.wav";
 
-function Clicker(props) {
+function Clicker({ setGame, game }) {
   const [isActive, setIsActive] = React.useState(false);
   const [mute, setMute] = React.useState(false);
 
   const [play] = useSound(boopSfx);
-  const updateScore = async () => {
+
+  const updateScore = () => {
     //Sound
     if (!mute) {
       play();
     }
+    const updatedGame = {
+      ...game,
+      score: game.score + game.click_multiplier,
+    };
 
-    //Score
-
-    //update score in parent component
-    await props.onInputChange(props.score + 1 * props.clickMultiplier);
+    setGame(updatedGame);
 
     //Animation
     setIsActive(true);
@@ -28,7 +30,7 @@ function Clicker(props) {
 
   return (
     <div className="clicker-body">
-      <div className="clicker-score">{props.score}</div>
+      <div className="clicker-score">{game.score}</div>
       <div
         className={`clicker ${isActive ? "clicker-active" : ""}`}
         onClick={updateScore}

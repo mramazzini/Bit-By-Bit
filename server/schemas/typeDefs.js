@@ -16,7 +16,7 @@ const typeDefs = gql`
     user: User
   }
   type Currency {
-    amount: Int
+    amount: Float
     name: String
     conversion_rate: Int
     amount_per_second: Int
@@ -40,7 +40,7 @@ const typeDefs = gql`
     description: String
     cost: Int
     level: Int
-    amount_per_second: Int
+    base_amount_per_second: Int
   }
   input FarmInput {
     name: String
@@ -49,7 +49,7 @@ const typeDefs = gql`
     description: String
     cost: Int
     level: Int
-    amount_per_second: Int
+    base_amount_per_second: Int
   }
   type Game {
     score: Int
@@ -86,7 +86,7 @@ const typeDefs = gql`
   }
 
   input CurrencyInput {
-    amount: Int
+    amount: Float
     name: String
     conversion_rate: Int
     amount_per_second: Int
@@ -97,6 +97,7 @@ const typeDefs = gql`
     game: Game
     upgrades: [Upgrade]
     biomes: [Biome]
+    farms: [Farm]
     amount_per_second(biome_name: String!): Int
   }
 

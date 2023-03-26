@@ -2,25 +2,10 @@ import React from "react";
 import "../../../styles/Biome.css";
 import Farm from "./Farm";
 import CurrencyConverter from "./CurrencyConverter";
-const Biome = ({ biomeData, score, updateScore }) => {
+import Game from "../../utils/Game";
+const Biome = ({ biomeData, game, setGame, biomeIndex }) => {
   const { farms, name, currency } = biomeData;
-  const [currencyAmount, setCurrencyAmount] = React.useState(() => {
-    const storedCurrencyAmount = window.localStorage.getItem(
-      `${name}-currencyAmount`
-    );
-    if (!storedCurrencyAmount) {
-      return currency.amount;
-    }
-    return storedCurrencyAmount
-      ? Number(storedCurrencyAmount)
-      : currency.amount;
-  });
-  React.useEffect(() => {
-    // Save the currencyAmount value to local storage when the component unmounts
-    return () => {
-      window.localStorage.setItem(`${name}-currencyAmount`, currencyAmount);
-    };
-  }, [name, currencyAmount]);
+
   const formatFarmName = (name) => {
     const words = name.split("_");
     // Remove the first word from the array
@@ -31,18 +16,35 @@ const Biome = ({ biomeData, score, updateScore }) => {
     return capitalizedWords.join(" ");
   };
 
-  const transferCurrencyToPoints = () => {
-    setCurrencyAmount(currencyAmount - 1);
-    updateScore(score + currency.conversion_rate);
+  const transferCurrencyToPoints = async () => {
+    let updateGame = Game.transferCurrency(game, biomeIndex);
+    setGame(updateGame);
   };
 
   //Add a useEffect to update the currency amount per second
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setCurrencyAmount(currencyAmount + currency.amount_per_second / 100);
+      setGame({
+        ...game,
+        biomes: game.biomes.map((biome, index) => {
+          if (index === biomeIndex) {
+            return {
+              ...biome,
+              currency: {
+                ...biome.currency,
+                amount:
+                  game.biomes[biomeIndex].currency.amount +
+                  game.biomes[biomeIndex].currency.amount_per_second / 100,
+              },
+            };
+          }
+          return biome;
+        }),
+      });
     }, 10);
     return () => clearInterval(interval);
-  }, [currencyAmount, currency.amount_per_second]);
+  }, [game]);
+
   return (
     <div className={name}>
       {farms.map((farm, index) => {
@@ -59,8 +61,8 @@ const Biome = ({ biomeData, score, updateScore }) => {
               level: farm.level,
               flavor: farm.flavor,
             }}
-            score={score}
-            updateScore={updateScore}
+            setGame={setGame}
+            game={game}
           />
         );
       })}
@@ -72,18 +74,18 @@ const Biome = ({ biomeData, score, updateScore }) => {
             <span className="biome-side-menu-body-title">{currency.name}s</span>
             <span className="biome-side-menu-amountPerSecond">
               per second: <br />
-              {currency.amount_per_second}
+              {biomeData.currency.amount_per_second}
             </span>
             Amount: <br />
-            {currencyAmount.toFixed(0)}
+            {biomeData.currency.amount.toFixed(0)}
           </div>
           <div className="biome-side-menu-conversion-rate">
             1 {currency.name} : {currency.conversion_rate} points
           </div>
           <CurrencyConverter
             updateCurrencyAmount={transferCurrencyToPoints}
-            biome_currency={currency.name}
-            currency_amount={parseInt(currencyAmount, 10)}
+            biome_currency={biomeData.currency.name}
+            currency_amount={parseInt(biomeData.currency.amount, 10)}
           />
         </div>
       </div>

@@ -1,27 +1,13 @@
 import React from "react";
-import { useMutation } from "@apollo/client";
-import { PURCHASE_FARM_UPGRADE } from "../../utils/mutations";
 
-const Farm = ({ biome, upgrade, score, updateScore }) => {
-  const [purchaseFarmUpgrade] = useMutation(PURCHASE_FARM_UPGRADE);
+import Game from "../../utils/Game";
+
+const Farm = ({ biome, upgrade, setGame, game }) => {
   const upgradeFarm = async () => {
-    try {
-      const response = await purchaseFarmUpgrade({
-        variables: {
-          name: upgrade.name,
-          score: score,
-        },
-      });
-      if (!response) {
-        throw new Error("Purchase failed");
-      } else if (response.data.purchaseFarmUpgrade === "purchased") {
-        console.log(upgrade.name, "Upgrade Purchased");
-        updateScore(score - upgrade.cost);
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    let updatedGame = Game.upgradeFarm(upgrade, biome, game);
+    setGame(updatedGame);
   };
+
   return (
     <div className={`theme-${biome} biome-upgrade`}>
       <header className="upgrade-header">{upgrade.formattedName}</header>

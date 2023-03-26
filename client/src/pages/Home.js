@@ -9,26 +9,24 @@ import { GET_GAME } from "../components/utils/queries";
 
 function Home() {
   const [updateGame] = useMutation(UPDATE_GAME);
-  const [clickMultiplier, setClickMultiplier] = useState(1);
+  const [game, setGame] = useState();
   const [initialized, setInitialized] = useState(false);
-  const [score, setScore] = useState(0);
-  const { loading, error, data: gameData, refetch } = useQuery(GET_GAME);
 
-  const updateScore = async (score) => {
-    setScore(score);
-  };
+  const { loading, error, data: gameData } = useQuery(GET_GAME);
 
-  const updateClickMultiplier = async (multiplier) => {
-    setClickMultiplier(clickMultiplier * multiplier);
-  };
-  console.log(JSON.parse(localStorage.getItem("gameData")).game);
   //AutoSave game every 30 seconds into database
   useEffect(() => {
     const intervalId = setInterval(async () => {
       try {
+        if (!game) {
+          console.log("Game not initialized, skipping autosave");
+          return;
+        }
+        console.log(game);
+        console.log("Autosaving...");
         await updateGame({
           variables: {
-            GameInput: JSON.parse(localStorage.getItem("gameData")).game,
+            GameInput: game,
           },
         });
         console.log("Game Autosaved!");
@@ -36,40 +34,29 @@ function Home() {
         console.error("Error Autosaving");
         console.error(e);
       }
-    }, 30000);
+    }, 15000);
+    console.log("Autosave interval set");
     return () => clearInterval(intervalId);
-  }, [score]);
+  }, [setGame]);
 
   if (loading) {
     return "Loading...";
   } else if (error) {
     return "Error, try refreshing the page";
   } else {
-    if (!initialized) {
-      setScore(gameData.game.score);
-      setClickMultiplier(gameData.game.click_multiplier);
+    if (gameData && gameData.game && !initialized) {
       setInitialized(true);
-      const jsonString = JSON.stringify(gameData);
 
-      // Store the object in local storage under the key "gameData"
-      localStorage.setItem("gameData", jsonString);
+      setGame(gameData.game);
     }
+
     return (
       <div className="home-page">
         <Navbar />
-        <Clicker
-          onInputChange={updateScore}
-          score={score}
-          clickMultiplier={clickMultiplier}
-        />
+        <Clicker setGame={setGame} game={game} />
 
         <div className="home-divider"></div>
-        <Dashboard
-          score={score}
-          updateScore={updateScore}
-          clickMultiplier={clickMultiplier}
-          updateClickMultiplier={updateClickMultiplier}
-        />
+        <Dashboard setGame={setGame} game={game} />
       </div>
     );
   }

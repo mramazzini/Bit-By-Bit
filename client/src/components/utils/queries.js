@@ -13,6 +13,7 @@ export const GET_GAME = gql`
         description
         price
         dependencies
+        unlocks
       }
       biomes {
         name
@@ -62,7 +63,7 @@ export const GET_BIOMES = gql`
       farms {
         name
         flavor
-        status
+
         description
         cost
         level
@@ -79,5 +80,17 @@ export const GET_BIOMES = gql`
 export const GET_AMOUNT_PER_SECOND = gql`
   query amountPerSecond($biome_name: String!) {
     amountPerSecond(biome_name: $biome_name)
+  }
+`;
+export const GET_FARMS = gql`
+  query farms {
+    farms {
+      name
+      flavor
+      base_amount_per_second
+      description
+      cost
+      level
+    }
   }
 `;
