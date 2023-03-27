@@ -13,6 +13,7 @@ function Home() {
   const [game, setGame] = useState();
   const [initialized, setInitialized] = useState(false);
   const updateCount = useRef(0);
+  const saving = useRef(false);
   const { loading, error, data: gameData } = useQuery(GET_GAME);
   const refreshGame = async (game) => {
     console.log("updating", game);
@@ -29,11 +30,10 @@ function Home() {
     }
 
     const gameUpdateTimerId = setInterval(async () => {
-      let saving = false;
-      if (!saving && updateCount.current % 6000 === 0) {
-        saving = true;
+      if (!saving.current && updateCount.current % 6000 === 0) {
+        saving.current = true;
         await autosave(game, updateGame, setGame, gameData);
-        saving = false;
+        saving.current = false;
       }
       updateCount.current++;
 
