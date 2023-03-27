@@ -139,12 +139,12 @@ class Game {
       console.log("Not enough money");
       return game;
     }
-    const getAmountPerSecond = (biome) => {
+    const getAmountPerSecond = (biome, farmIndex) => {
       let amount = 0;
       biome.farms.forEach((farm) => {
         amount += farm.level * (farm.base_amount_per_second || 0);
       });
-
+      amount += biome.farms[farmIndex].base_amount_per_second || 0;
       return amount;
     };
     //Update score, farm level, farm cost, and biome amount_per_second
@@ -166,7 +166,7 @@ class Game {
             ],
             currency: {
               ...biome.currency,
-              amount_per_second: getAmountPerSecond(biome),
+              amount_per_second: getAmountPerSecond(biome, farmIndex),
             },
           };
         }
