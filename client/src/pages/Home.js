@@ -29,8 +29,11 @@ function Home() {
     }
 
     const gameUpdateTimerId = setInterval(async () => {
-      if (updateCount.current % 3000 === 0) {
+      let saving = false;
+      if (!saving && updateCount.current % 6000 === 0) {
+        saving = true;
         await autosave(game, updateGame, setGame, gameData);
+        saving = false;
       }
       updateCount.current++;
 
