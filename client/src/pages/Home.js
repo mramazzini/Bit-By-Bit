@@ -14,7 +14,13 @@ function Home() {
   const [initialized, setInitialized] = useState(false);
   const updateCount = useRef(0);
   const saving = useRef(false);
-  const { loading, error, data: gameData } = useQuery(GET_GAME);
+  const {
+    loading,
+    error,
+    data: gameData,
+  } = useQuery(GET_GAME, {
+    fetchPolicy: "network-only",
+  });
   const refreshGame = async (game) => {
     console.log("updating", game);
     await setGame(() => {
