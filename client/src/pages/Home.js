@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import Navbar from "../components/global/Navbar";
 import Clicker from "../components/home/Clicker";
@@ -6,69 +6,61 @@ import Dashboard from "../components/home/Dashboard";
 import "../styles/Home.css";
 import { UPDATE_GAME } from "../components/utils/mutations";
 import { GET_GAME } from "../components/utils/queries";
-
+import functions from "../components/utils/intervals";
+const { autosave, updateScoreValues } = functions;
 function Home() {
   const [updateGame] = useMutation(UPDATE_GAME);
-  const [clickMultiplier, setClickMultiplier] = useState(1);
+  const [game, setGame] = useState();
   const [initialized, setInitialized] = useState(false);
-  const [score, setScore] = useState(0);
-  const { loading, error, data: gameData, refetch } = useQuery(GET_GAME);
-
-  const updateScore = async (score) => {
-    setScore(score);
+  const updateCount = useRef(0);
+  const { loading, error, data: gameData } = useQuery(GET_GAME);
+  const refreshGame = async (game) => {
+    console.log("updating", game);
+    await setGame(() => {
+      return game;
+    });
   };
-
-  const updateClickMultiplier = async (multiplier) => {
-    setClickMultiplier(clickMultiplier * multiplier);
-  };
-
   //AutoSave game every 30 seconds into database
+
   useEffect(() => {
-    const intervalId = setInterval(async () => {
-      try {
-        await updateGame({
-          variables: {
-            score: score,
-            snowflakes: parseInt(
-              window.localStorage.getItem("snow-currencyAmount")
-            ),
-          },
-        });
-        console.log("Game Autosaved!");
-      } catch (e) {
-        console.error("Error Autosaving");
-        console.error(e);
+    if (!game) {
+      console.log("Game not initialized, skipping autosave");
+      return;
+    }
+
+    const gameUpdateTimerId = setInterval(async () => {
+      if (updateCount.current % 3000 === 0) {
+        await autosave(game, updateGame, setGame, gameData);
       }
-    }, 30000);
-    return () => clearInterval(intervalId);
-  }, [score]);
+      updateCount.current++;
+
+      setGame(updateScoreValues(game));
+    }, 10);
+
+    return () => {
+      clearInterval(gameUpdateTimerId);
+    };
+  }, [gameData, game]);
 
   if (loading) {
     return "Loading...";
   } else if (error) {
     return "Error, try refreshing the page";
   } else {
-    if (!initialized) {
-      setScore(gameData.game.score);
-      setClickMultiplier(gameData.game.click_multiplier);
+    if (gameData && gameData.game && !initialized) {
       setInitialized(true);
+
+      setGame(gameData.game);
+      console.log(game);
     }
+
     return (
       <div className="home-page">
         <Navbar />
-        <Clicker
-          onInputChange={updateScore}
-          score={score}
-          clickMultiplier={clickMultiplier}
-        />
+        <Clicker setGame={refreshGame} game={game} />
 
         <div className="home-divider"></div>
-        <Dashboard
-          score={score}
-          updateScore={updateScore}
-          clickMultiplier={clickMultiplier}
-          updateClickMultiplier={updateClickMultiplier}
-        />
+        <Dashboard setGame={refreshGame} game={game} />
       </div>
     );
   }

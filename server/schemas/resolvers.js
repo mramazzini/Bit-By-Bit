@@ -22,8 +22,31 @@ const resolvers = {
       return user.game.upgrades;
     },
     biomes: async (parent, args, context) => {
-      const user = await User.findOne({ _id: context.user._id });
-      return user.game.biomes;
+      let directoryPath;
+      if (process.env.NODE_ENV === "production") {
+        directoryPath = "server/seeds/biomes.json";
+      } else {
+        directoryPath = "./seeds/biomes.json";
+      }
+
+      //Get upgrades from json and populate the model
+      const fileData = await fs.readFile(directoryPath, "utf8");
+
+      const biomes = await JSON.parse(fileData).biomes;
+      return biomes;
+    },
+    farms: async (parent, args, context) => {
+      let directoryPath;
+      if (process.env.NODE_ENV === "production") {
+        directoryPath = "server/seeds/farms.json";
+      } else {
+        directoryPath = "./seeds/farms.json";
+      }
+      //Get farms from json and populate the model
+      const fileData = await fs.readFile(directoryPath, "utf8");
+
+      const farms = await JSON.parse(fileData).farms;
+      return farms;
     },
     amount_per_second: async (parent, { biome_name }, context) => {
       try {
@@ -115,15 +138,11 @@ const resolvers = {
       return { token, user };
     },
 
-    updateGame: async (parent, { score, snowflakes }, context) => {
-      const updateFields = { "game.score": score };
-      if (snowflakes) {
-        updateFields["game.biomes.0.currency.amount"] = snowflakes;
-      }
+    updateGame: async (parent, { GameInput }, context) => {
       const user = await User.findOneAndUpdate(
         { _id: context.user._id },
         {
-          $set: updateFields,
+          $set: { game: GameInput },
         },
         { new: true }
       );

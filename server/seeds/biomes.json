@@ -1,12 +1,14 @@
 {
   "biomes": [
     {
-      "name": "snow",
       "completion_percentage": 0,
+      "name": "snow",
+      "farms": [],
       "currency": {
-        "amount": 0,
         "name": "snowflake",
-        "conversion_rate": "2"
+        "amount": 0,
+        "conversion_rate": 2,
+        "amount_per_second": 0
       }
     }
   ]

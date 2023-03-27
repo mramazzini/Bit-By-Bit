@@ -41,9 +41,18 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
+  defaultOptions: {
+    mutate: {
+      // Set `omitTypename` to `true` to automatically remove `__typename` from mutation requests
+      // This option is available in Apollo Client v3.4.0 or later
+      omitTypename: true,
+    },
+  },
   // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    addTypename: false,
+  }),
 });
 function RequireAuth({ children }) {
   return Auth.loggedIn() === true ? children : <Navigate to="/login" replace />;

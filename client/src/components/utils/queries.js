@@ -5,6 +5,34 @@ export const GET_GAME = gql`
     game {
       score
       click_multiplier
+      upgrades {
+        name
+        status
+        flavor
+        effect
+        description
+        price
+        dependencies
+        unlocks
+      }
+      biomes {
+        name
+        completion_percentage
+        currency {
+          name
+          amount
+          conversion_rate
+          amount_per_second
+        }
+        farms {
+          name
+          flavor
+
+          description
+          cost
+          level
+        }
+      }
     }
   }
 `;
@@ -35,7 +63,7 @@ export const GET_BIOMES = gql`
       farms {
         name
         flavor
-        status
+        base_amount_per_second
         description
         cost
         level
@@ -52,5 +80,17 @@ export const GET_BIOMES = gql`
 export const GET_AMOUNT_PER_SECOND = gql`
   query amountPerSecond($biome_name: String!) {
     amountPerSecond(biome_name: $biome_name)
+  }
+`;
+export const GET_FARMS = gql`
+  query farms {
+    farms {
+      name
+      flavor
+      base_amount_per_second
+      description
+      cost
+      level
+    }
   }
 `;
