@@ -3,9 +3,7 @@ import "../../../styles/Biome.css";
 import Farm from "./Farm";
 import CurrencyConverter from "./CurrencyConverter";
 import Game from "../../utils/Game";
-const Biome = ({ biomeData, game, setGame, biomeIndex }) => {
-  const { farms, name, currency } = biomeData;
-
+const Biome = ({ game, setGame, biomeIndex }) => {
   const formatFarmName = (name) => {
     const words = name.split("_");
     // Remove the first word from the array
@@ -21,38 +19,14 @@ const Biome = ({ biomeData, game, setGame, biomeIndex }) => {
     setGame(updateGame);
   };
 
-  //Add a useEffect to update the currency amount per second
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setGame({
-        ...game,
-        biomes: game.biomes.map((biome, index) => {
-          if (index === biomeIndex) {
-            return {
-              ...biome,
-              currency: {
-                ...biome.currency,
-                amount:
-                  game.biomes[biomeIndex].currency.amount +
-                  game.biomes[biomeIndex].currency.amount_per_second / 100,
-              },
-            };
-          }
-          return biome;
-        }),
-      });
-    }, 10);
-    return () => clearInterval(interval);
-  }, [game]);
-
   return (
-    <div className={name}>
-      {farms.map((farm, index) => {
+    <div className={game.biomes[biomeIndex].name}>
+      {game.biomes[biomeIndex].farms.map((farm, index) => {
         const formattedName = formatFarmName(farm.name);
         return (
           <Farm
             key={index}
-            biome={name}
+            biome={game.biomes[biomeIndex].name}
             upgrade={{
               formattedName: formattedName,
               name: farm.name,
@@ -60,32 +34,41 @@ const Biome = ({ biomeData, game, setGame, biomeIndex }) => {
               cost: farm.cost,
               level: farm.level,
               flavor: farm.flavor,
+              base_amount_per_second: farm.base_amount_per_second,
             }}
             setGame={setGame}
             game={game}
           />
         );
       })}
-      <div className={`biome-side-menu theme-${name}`}>
+      <div className={`biome-side-menu theme-${game.biomes[biomeIndex].name}`}>
         <div className="biome-side-menu-header">Converter</div>
-        <div className={`upgrade-image ${name}-upgrade-image`}></div>
+        <div
+          className={`upgrade-image ${game.biomes[biomeIndex].name}-upgrade-image`}
+        ></div>
         <div className="biome-side-menu-body">
           <div className="biome-side-menu-amount">
-            <span className="biome-side-menu-body-title">{currency.name}s</span>
+            <span className="biome-side-menu-body-title">
+              {game.biomes[biomeIndex].currency.name}s
+            </span>
             <span className="biome-side-menu-amountPerSecond">
               per second: <br />
-              {biomeData.currency.amount_per_second}
+              {game.biomes[biomeIndex].currency.amount_per_second}
             </span>
             Amount: <br />
-            {biomeData.currency.amount.toFixed(0)}
+            {game.biomes[biomeIndex].currency.amount.toFixed(0)}
           </div>
           <div className="biome-side-menu-conversion-rate">
-            1 {currency.name} : {currency.conversion_rate} points
+            1 {game.biomes[biomeIndex].name} :{" "}
+            {game.biomes[biomeIndex].currency.conversion_rate} points
           </div>
           <CurrencyConverter
             updateCurrencyAmount={transferCurrencyToPoints}
-            biome_currency={biomeData.currency.name}
-            currency_amount={parseInt(biomeData.currency.amount, 10)}
+            biome_currency={game.biomes[biomeIndex].currency.name}
+            currency_amount={parseInt(
+              game.biomes[biomeIndex].currency.amount,
+              10
+            )}
           />
         </div>
       </div>

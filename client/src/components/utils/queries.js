@@ -63,7 +63,7 @@ export const GET_BIOMES = gql`
       farms {
         name
         flavor
-
+        base_amount_per_second
         description
         cost
         level

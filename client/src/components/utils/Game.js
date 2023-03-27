@@ -1,5 +1,9 @@
 class Game {
   transferCurrency(game, biomeIndex) {
+    if (game.biomes[biomeIndex].currency.amount < 1) {
+      console.log("Not enough currency to transfer");
+      return game;
+    }
     return {
       ...game,
       score: game.score + game.biomes[biomeIndex].currency.conversion_rate,
@@ -118,7 +122,7 @@ class Game {
         }),
       };
     }
-    console.log(updatedGame);
+
     return updatedGame;
   }
   upgradeFarm(upgrade, biome_name, game) {
@@ -138,7 +142,7 @@ class Game {
     const getAmountPerSecond = (biome) => {
       let amount = 0;
       biome.farms.forEach((farm) => {
-        amount += farm.level * farm.base_amount_per_second;
+        amount += farm.level * (farm.base_amount_per_second || 0);
       });
 
       return amount;
@@ -169,7 +173,7 @@ class Game {
         return biome;
       }),
     };
-    console.log(updatedGame);
+
     return updatedGame;
   }
 }
